@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { environment } from '../environments/environment';
+
 
 @Component({
   selector: 'app-root',
@@ -10,4 +12,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'claimhere-front';
+
+  ngOnInit(): void {
+    console.log('Base URL:', environment.baseUrl);  // Debería mostrar la URL correcta según el entorno
+  }
 }
