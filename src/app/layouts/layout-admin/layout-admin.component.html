@@ -1,0 +1,8 @@
+<div [class.collapsed]="isCollapsed" class="vertical light">
+    <div class="wrapper">
+        <app-side-bar [isCollapsed]="isCollapsed"></app-side-bar>
+        <main class="p-4 sm:ml-64">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>
