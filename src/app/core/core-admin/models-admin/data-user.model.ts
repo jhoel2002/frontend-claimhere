@@ -1,14 +1,15 @@
 export interface DataUser {
-  idUsuario?: string;
-  nombreUsuario?: string;
+  id_usuario?: number;
+  nombre_usuario?: string;
   nombres?: string;
-  apellidos?: string;
-  correoUsuario?: string;
+  apellido_usuario?: string;
+  correo_usuario?: string;
   correo?: String;
-  passwordUsuario?: string;
+  password_usuario?: string;
   rol?: string;
   tipoDocIdentidad?: string;
   docIdentidad?: string;
+  tipo_usuario?: string;
   roles?: string[];
   
 }

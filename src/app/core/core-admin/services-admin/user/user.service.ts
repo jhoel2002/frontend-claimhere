@@ -1,19 +1,19 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { DataUser } from '../../models/data-user.model';
-import { environment } from '../../../../environments/environment';
+import { DataUser } from '../../models-admin/data-user.model';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private http: HttpClient){
-  }
+
+  private http = inject(HttpClient);
 
   getAll(): Observable<DataUser[]> {
       return this.http.get<DataUser[]>(
-          `${environment.baseUrl}${environment.usuarioEndpoint}/getAllUsuarios`
+          `${environment.baseUrl}${environment.usuarioEndpoint}/getAllUserByAdminRol`
         )
         .pipe(catchError(this.handleError));
   }

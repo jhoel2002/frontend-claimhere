@@ -1,12 +1,12 @@
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DataTableColumn } from '../../../core/models/datatable-column.model';
+import { DataTableColumn } from '../../../../core/core-admin/models-admin/datatable-column.model';
 
 @Component({
   selector: 'app-date-table',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule],
+  imports: [NgIf, NgFor, FormsModule, NgClass],
   templateUrl: './date-table.component.html',
   styleUrl: './date-table.component.css'
 })

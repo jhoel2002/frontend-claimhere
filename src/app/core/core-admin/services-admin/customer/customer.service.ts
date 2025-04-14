@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { DataCustomer } from '../../models/data-customer.model';
-import { environment } from '../../../../environments/environment';
+import { DataCustomer } from '../../models-admin/data-customer.model';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

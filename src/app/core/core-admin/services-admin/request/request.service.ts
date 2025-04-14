@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, Subject, throwError } from 'rxjs';
-import { environment } from '../../../../environments/environment';
-import { DataRequest } from '../../models/data-request.model';
+import { environment } from '../../../../../environments/environment';
+import { DataRequest } from '../../models-admin/data-request.model';
 
 @Injectable({
   providedIn: 'root'

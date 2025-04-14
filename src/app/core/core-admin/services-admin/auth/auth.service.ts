@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
-import { DataUser } from '../../models/data-user.model';
-import { environment } from '../../../../environments/environment';
-import { AuthResponse } from '../../models/auth-response.model';
-import { AuthData } from '../../models/auth-data.model';
+import { DataUser } from '../../models-admin/data-user.model';
+import { environment } from '../../../../../environments/environment';
+import { AuthResponse } from '../../models-admin/auth-response.model';
+import { AuthData } from '../../models-admin/auth-data.model';
 
 @Injectable({
   providedIn: 'root'

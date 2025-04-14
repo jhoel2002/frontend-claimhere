@@ -1,6 +1,5 @@
-import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { LayoutComponent } from './layouts/layout/layout.component';
+import { Routes } from '@angular/router';
+import { LayoutComponent } from './layouts/layout-home/layout.component';
 import { LayoutAdminComponent } from './layouts/layout-admin/layout-admin.component';
 
 export const routes: Routes = [

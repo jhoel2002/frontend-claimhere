@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DateTableComponent } from "../../../shared/components/date-table/date-table.component";
-import { DataTableColumn } from '../../../core/models/datatable-column.model';
+import { DateTableComponent } from "../../../shared/shared-admin/components-admin/date-table/date-table.component";
+import { DataTableColumn } from '../../../core/core-admin/models-admin/datatable-column.model';
 
 @Component({
   selector: 'app-rejected-request',
