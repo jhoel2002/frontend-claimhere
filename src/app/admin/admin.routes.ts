@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { UserAdminComponent } from './user-admin/user-admin.component';
 import { CompanyAdminComponent } from './company-admin/company-admin.component';
 import { CustomerAdminComponent } from './customer-admin/customer-admin.component';
+import { NotFoundComponent } from '../not-found/not-found.component';
 
 export const ADMIN_ROUTES: Routes = [
       {
@@ -22,7 +23,7 @@ export const ADMIN_ROUTES: Routes = [
           REQUEST_ROUTES),
       },
       {
-        path: '**',  
-        redirectTo: 'request/pending', 
+        path: '**',
+        component: NotFoundComponent
       }
 ];

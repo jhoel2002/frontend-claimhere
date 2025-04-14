@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { PendingRequestComponent } from './pending-request/pending-request.component';
 import { AcceptedRequestComponent } from './accepted-request/accepted-request.component';
 import { RejectedRequestComponent } from './rejected-request/rejected-request.component';
+import { NotFoundComponent } from '../../not-found/not-found.component';
 
 export const REQUEST_ROUTES: Routes = [
       {
@@ -20,7 +21,7 @@ export const REQUEST_ROUTES: Routes = [
         component: RejectedRequestComponent,
       },
       {
-        path: '**',  
-        redirectTo: 'pending', 
+        path: '**',
+        component: NotFoundComponent
       }
 ];

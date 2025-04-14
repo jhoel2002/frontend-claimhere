@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { MyClaimsComponent } from './my-claims/my-claims.component';
 import { CompanyComponent } from './company/company.component';
+import { NotFoundComponent } from '../not-found/not-found.component';
 
 export const PAGE_ROUTES: Routes = [
         {
@@ -17,7 +18,7 @@ export const PAGE_ROUTES: Routes = [
             component: CompanyComponent,
         },
         {
-            path: '**',  // Ruta wildcard para cualquier otra ruta desconocida
-            redirectTo: '', 
+            path: '**',
+            component: NotFoundComponent
         }
 ];
