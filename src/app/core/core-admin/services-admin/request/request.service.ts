@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, Subject, throwError } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { DataRequest } from '../../models-admin/data-request.model';
+import { nameEndpints } from '../../name-enpoints/name-endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class RequestService {
   findById(id: number): Observable<DataRequest> {
     return this.http
       .get<DataRequest>(
-        `${environment.baseUrl}${environment.requestEndpoint}/findById/${id}`
+        `${environment.baseUrl}${nameEndpints.requestEndpoint}/findById/${id}`
       )
       .pipe(catchError(this.handleError));
   }
@@ -32,7 +33,7 @@ export class RequestService {
   getAll(status: string): Observable<DataRequest[]> {
     return this.http
       .get<DataRequest[]>(
-        `${environment.baseUrl}${environment.requestEndpoint}/getAllReclamosAdmin?estadoActual=${status}`
+        `${environment.baseUrl}${nameEndpints.requestEndpoint}/getAllReclamosAdmin?estadoActual=${status}`
       )
       .pipe(catchError(this.handleError));
   }
@@ -40,7 +41,7 @@ export class RequestService {
   updateStatus(id: number, requestData: DataRequest): Observable<DataRequest> {
     return this.http
       .put<DataRequest>(
-        `${environment.baseUrl}${environment.requestEndpoint}/updateEstadoReclamo?idReclamo=${id}&estado=${requestData.estadoActual}`,
+        `${environment.baseUrl}${nameEndpints.requestEndpoint}/updateEstadoReclamo?idReclamo=${id}&estado=${requestData.estadoActual}`,
         requestData
       )
       .pipe(catchError(this.handleError));

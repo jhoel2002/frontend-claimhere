@@ -5,6 +5,7 @@ import { DataUser } from '../../models-admin/data-user.model';
 import { environment } from '../../../../../environments/environment';
 import { AuthResponse } from '../../models-admin/auth-response.model';
 import { AuthData } from '../../models-admin/auth-data.model';
+import { nameEndpints } from '../../name-enpoints/name-endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
   //1440 = 24 minutos
   currentUserData: BehaviorSubject<AuthResponse> =new BehaviorSubject<AuthResponse>({
     user:{
-      nombreUsuario: '',
+      nombre_usuario: '',
       rol: ''
     } ,
     token: ''
@@ -48,7 +49,7 @@ export class AuthService {
 
   login(credentials:AuthData):Observable<any>{
     const headers = { 'skip-interceptor': 'true'};
-    return this.http.post<any>(environment.baseUrl+"auth/loginAdmin",credentials, {headers}).pipe(
+    return this.http.post<any>(environment.baseUrl+nameEndpints.authEndpoint+"/loginAdmin",credentials, {headers}).pipe(
       tap( (userData:AuthResponse) => {
         localStorage.setItem("token", userData.token);
         localStorage.setItem("user", JSON.stringify(userData.user));

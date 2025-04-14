@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
 import { DataCompany } from '../../models-admin/data-company.model';
+import { nameEndpints } from '../../name-enpoints/name-endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class CompanyService {
   getAll(estado: string): Observable<any> {
     return this.http
       .get<any>(
-        `${environment.baseUrl}${environment.companyEndpoint}/getAllEmpresas/${estado}`
+        `${environment.baseUrl}${nameEndpints.companyEndpoint}/getAllEmpresas/${estado}`
       )
       .pipe(catchError(this.handleError));
   }
@@ -21,7 +22,7 @@ export class CompanyService {
   save(company: DataCompany): Observable<DataCompany> {
     return this.http
       .post<DataCompany>(
-        `${environment.baseUrl}${environment.companyEndpoint}/saveEmpresa`,
+        `${environment.baseUrl}${nameEndpints.companyEndpoint}/saveEmpresa`,
         company
       )
       .pipe(catchError(this.handleError));
@@ -30,7 +31,7 @@ export class CompanyService {
   delete(companyId: number): Observable<any> {
     return this.http
       .delete(
-        `${environment.baseUrl}${environment.companyEndpoint}/deleteEmpresa/${companyId}`
+        `${environment.baseUrl}${nameEndpints.companyEndpoint}/deleteEmpresa/${companyId}`
       )
       .pipe(catchError(this.handleError));
   }
@@ -38,7 +39,7 @@ export class CompanyService {
   updateEmpresa(companyData: DataCompany): Observable<any> {
     return this.http
       .put(
-        `${environment.baseUrl}${environment.companyEndpoint}/updateEmpresa`,
+        `${environment.baseUrl}${nameEndpints.companyEndpoint}/updateEmpresa`,
         companyData
       )
       .pipe(catchError(this.handleError));

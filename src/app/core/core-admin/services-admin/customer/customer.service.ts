@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { DataCustomer } from '../../models-admin/data-customer.model';
 import { environment } from '../../../../../environments/environment';
+import { nameEndpints } from '../../name-enpoints/name-endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class CustomerService {
   getAll(): Observable<DataCustomer[]> {
     return this.http
       .get<DataCustomer[]>(
-        `${environment.baseUrl}${environment.clientEndpoint}/getAllClientes`
+        `${environment.baseUrl}${nameEndpints.clientEndpoint}/getAllClientes`
       )
       .pipe(catchError(this.handleError));
   }
@@ -21,7 +22,7 @@ export class CustomerService {
   update(clientData: DataCustomer): Observable<any> {
     return this.http
       .put(
-        `${environment.baseUrl}${environment.clientEndpoint}/updateClienteAdmin`,
+        `${environment.baseUrl}${nameEndpints.clientEndpoint}/updateClienteAdmin`,
         clientData
       )
       .pipe(catchError(this.handleError));

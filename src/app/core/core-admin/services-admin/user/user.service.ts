@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { DataUser } from '../../models-admin/data-user.model';
 import { environment } from '../../../../../environments/environment';
+import { nameEndpints } from '../../name-enpoints/name-endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -13,34 +14,34 @@ export class UserService {
 
   getAll(): Observable<DataUser[]> {
       return this.http.get<DataUser[]>(
-          `${environment.baseUrl}${environment.usuarioEndpoint}/getAllUserByAdminRol`
+          `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/getAllUserByAdminRol`
         )
         .pipe(catchError(this.handleError));
   }
 
   register(credentials: DataUser): Observable<any> {
-      return this.http.post<any>(`${environment.baseUrl}${environment.usuarioEndpoint}/registerAdmin`, credentials)
+      return this.http.post<any>(`${environment.baseUrl}${nameEndpints.usuarioEndpoint}/registerAdmin`, credentials)
       .pipe(catchError(this.handleError));
   }
 
   updateUsuario(usuarioData: DataUser): Observable<any>{
     return this.http
       .put<any>(
-        `${environment.baseUrl}${environment.usuarioEndpoint}/updateUsuario`,usuarioData)
+        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/updateUsuario`,usuarioData)
       .pipe(catchError(this.handleError));
   }
 
   updatePerfil(usuarioData: DataUser): Observable<any>{
     return this.http
       .put<any>(
-        `${environment.baseUrl}${environment.usuarioEndpoint}/updatePerfil`,usuarioData)
+        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/updatePerfil`,usuarioData)
       .pipe(catchError(this.handleError));
   }
 
   delete(companyId: number, rol: string): Observable<any> {
     return this.http
       .delete(
-        `${environment.baseUrl}${environment.usuarioEndpoint}/deleteUsuario?idUsuario=${companyId}&rol=${rol}`
+        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/deleteUsuario?idUsuario=${companyId}&rol=${rol}`
       )
       .pipe(catchError(this.handleError));
   }
@@ -48,7 +49,7 @@ export class UserService {
   findByCorreoUsuario(): Observable<DataUser> {
     return this.http
       .get<DataUser>(
-        `${environment.baseUrl}${environment.usuarioEndpoint}/findUsuarioByCorreo`
+        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/findUsuarioByCorreo`
       )
       .pipe(catchError(this.handleError));
   }

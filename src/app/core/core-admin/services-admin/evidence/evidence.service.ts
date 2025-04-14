@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../../../environments/environment';
+import { nameEndpints } from '../../name-enpoints/name-endpoints';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class EvidenceService {
   downloadFile(evidenceId: number): Observable<Blob> {
     return this.http
       .get(
-        `${environment.baseUrl}${environment.evidenceEndpoint}/descargarEvidenciaById/${evidenceId}`,
+        `${environment.baseUrl}${nameEndpints.evidenceEndpoint}/descargarEvidenciaById/${evidenceId}`,
         { responseType: 'blob' }
       )
       .pipe(catchError(this.handleError));
