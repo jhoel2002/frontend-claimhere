@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
     {
@@ -6,10 +7,6 @@ export const routes: Routes = [
       loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
       loadChildren: () => import('./auth/auth.routes').then(m => m.
         AUTH_ROUTES),
-    },
-    {
-      path: '**',
-      loadComponent: () => import('./not-found/not-found.component').then(m => m.NotFoundComponent)
     },
     {
       path: 'admin',
@@ -22,5 +19,10 @@ export const routes: Routes = [
       loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
       loadChildren: () => import('./pages/page.routes').then(m => m.
         PAGE_ROUTES),
+    },
+    {
+      path: '**',
+      component: NotFoundComponent,
+      
     }
 ];
