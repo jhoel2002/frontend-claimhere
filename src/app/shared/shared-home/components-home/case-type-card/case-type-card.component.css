@@ -1,0 +1,13 @@
+.expanded {
+    transform: translateY(-4px);
+  }
+  
+  .h-0 {
+    max-height: 0;
+    opacity: 0;
+  }
+  
+  .h-auto {
+    max-height: 500px;
+    opacity: 1;
+  }
