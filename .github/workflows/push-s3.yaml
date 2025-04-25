@@ -1,38 +1,42 @@
-name: Actualización de S3
+name: Deploy a S3 desde GitHub Actions
 
 on:
   push:
     branches:
       - develop
+  workflow_dispatch: 
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Clonar repositorio
-      uses: actions/checkout@v4
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
 
-    - name: Usar Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20 # O el que uses en tu proyecto
+      - name: Verificar estructura de carpetas (debug opcional)
+        run: ls -la && ls -la 
 
-    - name: Instalar dependencias
-      working-directory: ./frontend-claimhere
-      run: npm install
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-    - name: Construir aplicación Angular
-      working-directory: ./frontend-claimhere
-      run: npm run build
+      - name: Instalar dependencias
+        run: npm install
+        working-directory: ./frontend-claimhere
 
-    - name: Configurar credenciales AWS
-      uses: aws-actions/configure-aws-credentials@v4.1.0
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+      - name: Construir aplicación Angular
+        run: npm run build
+        working-directory: ./frontend-claimhere
 
-    - name: Subir archivos generados a S3
-      run: |
-        aws s3 sync ./frontend-claimhere/dist/claimhere-front/browser/ s3://pruebaautomatizacion/ --delete
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Subir archivos a S3
+        run: |
+          aws s3 sync ./frontend-claimhere/dist/claimhere-front/browser/ s3://pruebaautomatizacion/ --delete
