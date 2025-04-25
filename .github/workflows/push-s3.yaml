@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verificar estructura de carpetas (debug opcional)
-        run: ll
+        run: ls -a
 
       - name: Configurar Node.js
         uses: actions/setup-node@v4
