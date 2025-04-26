@@ -1,16 +1,21 @@
-import { RouterModule, Routes } from '@angular/router';
-import { CompanyComponent } from '../pages/company/company.component';
+import { Routes } from '@angular/router';
 import { UserAdminComponent } from './user-admin/user-admin.component';
-import { LayoutComponent } from '../layouts/layout/layout.component';
+import { CompanyAdminComponent } from './company-admin/company-admin.component';
+import { CustomerAdminComponent } from './customer-admin/customer-admin.component';
+import { NotFoundComponent } from '../not-found/not-found.component';
 
 export const ADMIN_ROUTES: Routes = [
       {
         path: 'company',  // Ruta de login
-        component: CompanyComponent,
+        component: CompanyAdminComponent,
       },
       {
         path: 'user',
         component: UserAdminComponent,
+      },
+      {
+        path: 'customer',
+        component: CustomerAdminComponent,
       },
       {
         path: 'request',
@@ -18,7 +23,7 @@ export const ADMIN_ROUTES: Routes = [
           REQUEST_ROUTES),
       },
       {
-        path: '**',  
-        redirectTo: 'request/pending', 
+        path: '**',
+        component: NotFoundComponent
       }
 ];

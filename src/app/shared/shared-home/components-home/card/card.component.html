@@ -1,0 +1,66 @@
+<div *ngIf="isOpen" class="fixed inset-0 z-50 flex items-center justify-center">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="close()"></div>
+  
+  <!-- Modal -->
+  <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl m-4 animate-modal-up">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b dark:border-gray-700">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+        {{ claim.title }}
+      </h3>
+      <button 
+        (click)="close()"
+        class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Content -->
+    <div class="p-6">
+      <div class="flex items-center gap-4 mb-4">
+        <img [src]="claim.avatar" alt="Author" class="w-12 h-12 rounded-full">
+        <div>
+          <p class="font-semibold text-gray-900 dark:text-white">{{ claim.author }}</p>
+          <p class="text-sm text-gray-500">{{ claim.date }}</p>
+        </div>
+        <span class="ml-auto px-3 py-1 text-sm font-semibold rounded-full"
+              [ngClass]="{
+                'bg-green-100 text-green-800': claim.status === 'approved',
+                'bg-red-100 text-red-800': claim.status === 'rejected',
+                'bg-yellow-100 text-yellow-800': claim.status === 'pending'
+              }">
+          {{ claim.status }}
+        </span>
+      </div>
+      
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-900 dark:text-white mb-2">Category</h4>
+        <p class="text-gray-600 dark:text-gray-300">{{ claim.category }}</p>
+      </div>
+      
+      <div class="mb-4">
+        <h4 class="font-medium text-gray-900 dark:text-white mb-2">Description</h4>
+        <p class="text-gray-600 dark:text-gray-300">{{ claim.description }}</p>
+      </div>
+      
+      <div>
+        <h4 class="font-medium text-gray-900 dark:text-white mb-2">Details</h4>
+        <p class="text-gray-600 dark:text-gray-300">{{ claim.details }}</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2 p-4 border-t dark:border-gray-700">
+      <button
+        (click)="close()"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

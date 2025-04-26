@@ -1,24 +1,28 @@
-import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
+import { Routes } from '@angular/router';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 export const routes: Routes = [
     {
       path: 'auth',
+      loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
       loadChildren: () => import('./auth/auth.routes').then(m => m.
         AUTH_ROUTES),
     },
     {
       path: 'admin',
+      loadComponent: () => import('./layouts/layout-admin/layout-admin.component').then(m => m.LayoutAdminComponent),
       loadChildren: () => import('./admin/admin.routes').then(m => m.
         ADMIN_ROUTES),
     },
     {
       path: '',
+      loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
       loadChildren: () => import('./pages/page.routes').then(m => m.
         PAGE_ROUTES),
     },
     {
-      path: '**', // Ruta para 404 o página no encontrada
-      redirectTo: '',
+      path: '**',
+      component: NotFoundComponent,
+      
     }
 ];
