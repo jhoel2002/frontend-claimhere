@@ -78,6 +78,7 @@ jobs:
         run: npm install
 
       - name: Create environment files
+        run: npm run envs
         env:
           BASE_URL_DEV: ${{ secrets.BASE_URL_DEV }}
           BASE_URL_PROD: ${{ secrets.BASE_URL_PROD }}
