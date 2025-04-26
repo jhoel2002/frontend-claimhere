@@ -1,0 +1,19 @@
+name: Deploy a QA a PRD en S3
+
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+steps:
+
+  - name: Configurar credenciales AWS
+    uses: aws-actions/configure-aws-credentials@v4
+    with:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      aws-region: us-east-1
+
+  - name: Subir archivos a S3
+    run: |
+      aws s3 cp s3://angular-prueba-2/ s3://pruebaautomatizacion/ --recursive
