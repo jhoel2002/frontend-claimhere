@@ -77,6 +77,11 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
+      - name: Create environment files
+        env:
+          BASE_URL_DEV: ${{ secrets.BASE_URL_DEV }}
+          BASE_URL_PROD: ${{ secrets.BASE_URL_PROD }}
+
       ########################################################
       # 9. Construir aplicación Angular
       ########################################################
