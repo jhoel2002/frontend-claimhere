@@ -1,5 +1,12 @@
 name: Deploy a QA a PRD en S3
 
+on:
+  workflow_dispatch:
+    inputs:
+      estado:
+        description: 'Envia 1 para enviar a S3 de PRD'
+        required: true
+        default: '1'
 
 jobs:
   build-and-deploy:
