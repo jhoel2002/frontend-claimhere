@@ -1,0 +1,42 @@
+name: Deploy a S3 desde GitHub Actions
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch: 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Verificar estructura de carpetas (debug opcional)
+        run: ls -a
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependencias
+        run: npm install
+       
+
+      - name: Construir aplicación Angular
+        run: npm run build
+        
+
+      - name: Configurar credenciales AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Subir archivos a S3
+        run: |
+          aws s3 sync dist/claimhere-front/browser/ ${{ secrets.AWS_SECRET_S3_DEV }} --delete
