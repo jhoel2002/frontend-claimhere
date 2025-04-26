@@ -1,21 +1,22 @@
-name: Merge Feature a Develop y Copiar archivos S3 PRD
+name: Merge Feature a Main y Deploy a S3
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
     types: [ opened, reopened ]
 
 jobs:
-  merge-feature-into-develop:
+  merge-feature-into-main:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
+
     steps:
       ########################################################
-      # 1. Descargar código destino (develop)
+      # 1. Descargar código destino (main)
       ########################################################
-      - name: Checkout destino (develop)
+      - name: Checkout destino (main)
         uses: actions/checkout@v4
         with:
           ref: ${{ github.base_ref }}
@@ -40,17 +41,50 @@ jobs:
       ########################################################
       # 4. Push de cambios
       ########################################################
-      - name: Push cambios a develop
+      - name: Push cambios a main
         run: |
           git push origin ${{ github.base_ref }}
 
   build-and-deploy:
     runs-on: ubuntu-latest
-    needs: merge-feature-into-develop
+    needs: merge-feature-into-main
     if: ${{ success() }}
+
     steps:
       ########################################################
-      # 5. Configurar credenciales AWS
+      # 5. Clonar repositorio
+      ########################################################
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      ########################################################
+      # 6. Verificar estructura de carpetas
+      ########################################################
+      - name: Verificar estructura de carpetas
+        run: ls -a
+
+      ########################################################
+      # 7. Configurar Node.js
+      ########################################################
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      ########################################################
+      # 8. Instalar dependencias
+      ########################################################
+      - name: Instalar dependencias
+        run: npm install
+
+      ########################################################
+      # 9. Construir aplicación Angular
+      ########################################################
+      - name: Construir aplicación Angular
+        run: npm run build
+
+      ########################################################
+      # 10. Configurar credenciales AWS
       ########################################################
       - name: Configurar credenciales AWS
         uses: aws-actions/configure-aws-credentials@v4
@@ -60,8 +94,9 @@ jobs:
           aws-region: us-east-1
 
       ########################################################
-      # 6. Copiar archivos de QA a PRD
+      # 11. Subir archivos construidos a S3
       ########################################################
-      - name: Copiar archivos de S3 QA a S3 PRD
+      - name: Subir archivos a S3
         run: |
-          aws s3 cp s3://pruebaautomatizacion/ s3://legalcode-prd/ --recursive
+          aws s3 sync dist/claimhere-front/browser/ ${{ secrets.AWS_SECRET_S3_PRD }} --delete
+  
