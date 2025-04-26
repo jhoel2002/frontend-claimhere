@@ -21,4 +21,4 @@ jobs:
 
       - name: Subir archivos de QA a PRD
         run: |
-          aws s3 cp s3://angular-prueba-2/ s3://pruebaautomatizacion/ --recursive
+          aws s3 cp s3://pruebaautomatizacion/ s3://angular-prueba-2/ --recursive
