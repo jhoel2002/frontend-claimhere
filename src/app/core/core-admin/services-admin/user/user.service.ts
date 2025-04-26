@@ -14,7 +14,7 @@ export class UserService {
 
   getAll(): Observable<DataUser[]> {
       return this.http.get<DataUser[]>(
-          `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/getAllUserByAdminRol`
+          `${environment.baseUrl}${nameEndpints.usuarioEndpoint}`
         )
         .pipe(catchError(this.handleError));
   }
