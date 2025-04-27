@@ -16,10 +16,13 @@ export class UserAdminComponent {
   userService = inject(UserService);
 
   columns: DataTableColumn[] = [
-    { label: 'Nombre', dataKey: 'nombre_usuario' },
-    { label: 'Apellido', dataKey: 'apellido_usuario' },
-    { label: 'Correo', dataKey: 'correo_usuario'},
-    { label: 'Rol', dataKey: 'tipo_usuario' },
+    { label: 'Nombre', dataKey: 'name' },
+    { label: 'Apellido', dataKey: 'last_name' },
+    { label: 'Correo', dataKey: 'email'},
+    { label: 'Telefono', dataKey: 'phone' },
+    { label: 'Rol', dataKey: 'role' },
+    { label: 'Direccion', dataKey: 'address' },
+    { label: 'Fecha de Creacion', dataKey: 'creation' },
   ];
 
   data: DataUser[] = [];

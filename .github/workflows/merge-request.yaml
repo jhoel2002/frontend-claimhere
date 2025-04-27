@@ -77,11 +77,17 @@ jobs:
       - name: Instalar dependencias
         run: npm install
 
+      - name: Create environment files
+        run: npm run envs
+        env:
+          BASE_URL_DEV: ${{ secrets.BASE_URL_DEV }}
+          BASE_URL_PROD: ${{ secrets.BASE_URL_PROD }}
+
       ########################################################
       # 9. Construir aplicación Angular
       ########################################################
       - name: Construir aplicación Angular
-        run: npm run build
+        run: npm run build -- --configuration production
 
       ########################################################
       # 10. Configurar credenciales AWS
