@@ -87,7 +87,7 @@ jobs:
       # 9. Construir aplicación Angular
       ########################################################
       - name: Construir aplicación Angular
-        run: npm run build
+        run: npm run build -- --configuration production
 
       ########################################################
       # 10. Configurar credenciales AWS
