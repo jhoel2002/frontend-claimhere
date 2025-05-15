@@ -1,28 +1,20 @@
 import { Routes } from '@angular/router';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { LoginComponent } from './auth/login/login.component';
 
 export const routes: Routes = [
     {
-      path: 'auth',
-      loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
-      loadChildren: () => import('./auth/auth.routes').then(m => m.
-        AUTH_ROUTES),
-    },
-    {
-      path: 'admin',
-      loadComponent: () => import('./layouts/layout-admin/layout-admin.component').then(m => m.LayoutAdminComponent),
-      loadChildren: () => import('./admin/admin.routes').then(m => m.
-        ADMIN_ROUTES),
+      path: 'login',
+      component: LoginComponent
     },
     {
       path: '',
-      loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
-      loadChildren: () => import('./pages/page.routes').then(m => m.
+      loadComponent: () => import('./layouts/layout.component').then(m => m.LayoutComponent),
+      loadChildren: () => import('./pages/pages.routes').then(m => m.
         PAGE_ROUTES),
     },
     {
       path: '**',
       component: NotFoundComponent,
-      
     }
 ];
