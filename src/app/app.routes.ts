@@ -4,7 +4,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 export const routes: Routes = [
     {
       path: 'auth',
-      loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
+      //loadComponent: () => import('./layouts/layout-home/layout.component').then(m => m.LayoutComponent),
       loadChildren: () => import('./auth/auth.routes').then(m => m.
         AUTH_ROUTES),
     },

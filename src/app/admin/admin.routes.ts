@@ -6,7 +6,7 @@ import { NotFoundComponent } from '../not-found/not-found.component';
 
 export const ADMIN_ROUTES: Routes = [
       {
-        path: 'company',  // Ruta de login
+        path: 'company',
         component: CompanyAdminComponent,
       },
       {

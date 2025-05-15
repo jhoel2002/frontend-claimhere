@@ -3,6 +3,7 @@ import { DateTableComponent } from '../../shared/shared-admin/components-admin/d
 import { DataTableColumn } from '../../core/core-admin/models-admin/datatable-column.model';
 import { UserService } from '../../core/core-admin/services-admin/user/user.service';
 import { DataUser } from '../../core/core-admin/models-admin/data-user.model';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-admin',

@@ -14,34 +14,34 @@ export class UserService {
 
   getAll(): Observable<DataUser[]> {
       return this.http.get<DataUser[]>(
-          `${environment.baseUrl}${nameEndpints.usuarioEndpoint}`
+          `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}`
         )
         .pipe(catchError(this.handleError));
   }
 
   register(credentials: DataUser): Observable<any> {
-      return this.http.post<any>(`${environment.baseUrl}${nameEndpints.usuarioEndpoint}/registerAdmin`, credentials)
+      return this.http.post<any>(`${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/registerAdmin`, credentials)
       .pipe(catchError(this.handleError));
   }
 
   updateUsuario(usuarioData: DataUser): Observable<any>{
     return this.http
       .put<any>(
-        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/updateUsuario`,usuarioData)
+        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/updateUsuario`,usuarioData)
       .pipe(catchError(this.handleError));
   }
 
   updatePerfil(usuarioData: DataUser): Observable<any>{
     return this.http
       .put<any>(
-        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/updatePerfil`,usuarioData)
+        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/updatePerfil`,usuarioData)
       .pipe(catchError(this.handleError));
   }
 
   delete(companyId: number, rol: string): Observable<any> {
     return this.http
       .delete(
-        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/deleteUsuario?idUsuario=${companyId}&rol=${rol}`
+        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/deleteUsuario?idUsuario=${companyId}&rol=${rol}`
       )
       .pipe(catchError(this.handleError));
   }
@@ -49,7 +49,7 @@ export class UserService {
   findByCorreoUsuario(): Observable<DataUser> {
     return this.http
       .get<DataUser>(
-        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/findUsuarioByCorreo`
+        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/findUsuarioByCorreo`
       )
       .pipe(catchError(this.handleError));
   }
