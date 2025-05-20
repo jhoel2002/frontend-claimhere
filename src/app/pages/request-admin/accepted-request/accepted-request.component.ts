@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { DateTableComponent } from "../../../shared/components-admin/date-table/date-table.component";
 import { DataTableColumn } from '../../../core/models/datatable-column.model';
+import { DataTableComponent } from '../../../shared/components-admin/data-table/data-table.component';
 
 @Component({
   selector: 'app-accepted-request',
   standalone: true,
-  imports: [DateTableComponent],
+  imports: [DataTableComponent],
   templateUrl: './accepted-request.component.html',
   styleUrl: './accepted-request.component.css'
 })

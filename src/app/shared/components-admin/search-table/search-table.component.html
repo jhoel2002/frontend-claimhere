@@ -1,0 +1,33 @@
+  <label for="table-search" class="sr-only">Buscar</label>
+  <div class="flex items-center space-x-2">
+    <div class="relative w-80">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"></path>
+        </svg>
+      </div>
+      <input type="text"
+            [(ngModel)]="searchInputText"
+            [disabled]="isSearch"
+            id="table-search"
+            class="block w-full p-2 pl-10 text-sm border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Buscar...">
+    </div>
+
+    <!-- Botón de Buscar -->
+    <button *ngIf="!isSearch"
+            [disabled]="!searchInputText || searchInputText.trim() === ''"
+            (click)="searchWithButton()"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700">
+      Buscar
+    </button>
+
+    <!-- Botón de Cancelar -->
+    <button *ngIf="isSearch"
+            (click)="noSearchWithButton()"
+            class="px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700">
+      Cancelar búsqueda
+    </button>
+  </div>

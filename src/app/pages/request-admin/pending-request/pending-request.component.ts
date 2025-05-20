@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { DateTableComponent } from "../../../shared/components-admin/date-table/date-table.component";
+import { DataTableComponent } from "../../../shared/components-admin/data-table/data-table.component";
 import { DataTableColumn } from '../../../core/models/datatable-column.model';
 
 @Component({
   selector: 'app-pending-request',
   standalone: true,
-  imports: [DateTableComponent],
+  imports: [DataTableComponent],
   templateUrl: './pending-request.component.html',
   styleUrl: './pending-request.component.css'
 })

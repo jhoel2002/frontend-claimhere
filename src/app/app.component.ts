@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { initFlowbite } from 'flowbite';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
@@ -13,5 +14,6 @@ export class AppComponent implements OnInit{
   title = 'claimhere-front';
 
   ngOnInit(): void {
+    // initFlowbite();
   }
 }

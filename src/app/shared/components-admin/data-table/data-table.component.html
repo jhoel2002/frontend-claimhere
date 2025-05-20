@@ -1,0 +1,53 @@
+<table class="w-full text-sm text-left rtl:text-right text-gray-500">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+            <th scope="col" class="p-4">
+                <div class="flex items-center">
+                    <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500">
+                    <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                </div>
+            </th>
+            <ng-container *ngFor="let column of columns">
+                <th scope="col" class="px-6 py-3">
+                    {{column.label}}
+                </th>
+            </ng-container>
+
+            <th scope="col" class="px-6 py-3">
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of data; let rowIndex = index" class="bg-white border-b border-gray-200 hover:bg-gray-50">
+            <ng-container *ngFor="let column of columns; let i = index">
+                <!-- Solo en la primera columna, muestra el checkbox -->
+                <td *ngIf="i === 0" class="w-4 p-4">
+                    <div class="flex items-center">
+                    <input
+                        id="checkbox-table-search-{{ i }}"
+                        type="checkbox"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 not-even:focus:ring-2"/>
+                    <label for="checkbox-table-search-{{ i }}" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <!-- Celdas con los datos -->
+                <td class="px-6 py-4">
+                    {{ row[column.dataKey] }}
+                </td> 
+                <!-- Solo en la última columna, muestra el enlace Edit -->
+                <td *ngIf="i === columns.length - 1" class="px-6 py-4">
+                    <app-dropdown-action-table
+                        [row]="rowIndex"
+                        [isRequest]="isRequest"
+                        [estadoAceptado]="estadoAceptado"
+                        [isEmpleados]="isEmpleados"
+                        (viewRequest)="viewRequest(row.idReclamo)"
+                        (editItem)="editItem(row)"
+                        (deleteItem)="deleteItem(row)">
+                    </app-dropdown-action-table>
+                </td>
+            </ng-container>
+        </tr>
+    </tbody>
+</table>

@@ -1,4 +1,17 @@
 <h2 class="text-3xl mb-4 dark:text-gray-700 font-bold">Usuarios</h2>
-<app-date-table 
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 gap-y-4">
+        <app-date-range-table (dateRangeSelected)="handleDateRange($event)" (dateRangeCleared)="handleCancelDateFilter()"></app-date-range-table>
+        <app-search-table (onSearch)="handleSearch($event)" (noSearch)="handleCancelSearchFilter()"></app-search-table>
+    </div>
+    <app-data-table 
     [columns]="columns" 
-    [data]="data"></app-date-table>
+    [data]="users"></app-data-table>
+    <app-modal-user-form (valueForm)="reloadData()"></app-modal-user-form>
+</div>
+<app-pagination-table
+    [totalPages]="totalPages"
+    [currentPage]="pageNumber"
+    (pageChange)="onPageChange($event)">
+</app-pagination-table>
+<!-- <app-modal-empleados-form-update (dataUpdated)="reloadData()"></app-modal-empleados-form-update> -->
