@@ -1,9 +1,11 @@
 export interface User {
+  id: number;
   name: string;
-  last_name: string;
+  lastname: string;
   email: string;
+  password?: string;
   phone: string;
   role: string;
   address: string;
-  creation: string; // o Date si lo prefieres
+  creation: string;
 }

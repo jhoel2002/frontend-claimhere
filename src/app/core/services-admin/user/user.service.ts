@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, of, throwError } from 'rxjs';
+import { catchError, delay, Observable, of, throwError } from 'rxjs';
 import { DataUser } from '../../models/data-user.model';
 import { environment } from '../../../../environments/environment';
 import { nameEndpints } from '../../name-enpoints/name-endpoints';
@@ -17,7 +17,7 @@ export class UserService {
   private users = Array.from({ length: 100 }).map((_, i) => ({
     id: i + 1,
     name: ['Ana', 'Carlos', 'María', 'Juan', 'Pedro', 'Luis', 'Sofía', 'Camila', 'José', 'Valeria'][i % 10] + ` ${['Andrés', 'Belén', 'César', 'Diana', 'Eduardo', 'Fabiola', 'Gustavo', 'Helena', 'Iván', 'Julia'][Math.floor(Math.random() * 10)]}`,
-    last_name: ['García', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Fernández', 'Ruiz', 'Díaz'][Math.floor(Math.random() * 10)],
+    lastname: ['García', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Fernández', 'Ruiz', 'Díaz'][Math.floor(Math.random() * 10)],
     email: `user${i + 1}${['@gmail.com','@hotmail.com','@yahoo.com','@example.com'][Math.floor(Math.random() * 4)]}`,
     phone: `9${Math.floor(10000000 + Math.random() * 90000000)}`,
     role: ['Admin', 'User', 'Manager', 'Supervisor', 'Guest'][i % 5],
@@ -68,7 +68,7 @@ export class UserService {
   searchSimulation(searchText: string, page: number, size: number): Observable<any> {
     const filtered = this.users.filter(u =>
       u.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      u.last_name.toLowerCase().includes(searchText.toLowerCase()) ||
+      u.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
       u.email.toLowerCase().includes(searchText.toLowerCase())
     );
     const start = page * size;
@@ -154,7 +154,7 @@ export class UserService {
 
       const matchesText = !searchText || (
         user.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        user.last_name.toLowerCase().includes(searchText.toLowerCase()) ||
+        user.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
         user.email.toLowerCase().includes(searchText.toLowerCase())
       );
       const matchesDate = creationDate >= startDate && creationDate <= endDate;
@@ -173,16 +173,40 @@ export class UserService {
     });
   }
 
-  register(credentials: DataUser): Observable<any> {
-      return this.http.post<any>(`${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/registerAdmin`, credentials)
+  register(userData: User): Observable<any> {
+      return this.http.post<any>(`${environment.baseUrl}${nameEndpints.usuarioEndpoint}/register`, userData)
       .pipe(catchError(this.handleError));
   }
 
-  updateUsuario(usuarioData: DataUser): Observable<any>{
+  registerSimulation(userData: User): Observable<any> {
+    const newUser: User = {
+      ...userData,
+      id: this.users.length + 1,
+      creation: new Date().toLocaleDateString('es-PE')
+    };
+ 
+    this.users.unshift(newUser);
+    return of({ message: 'Usuario registrado correctamente' }).pipe(delay(500));
+  }
+
+  update(userId: number, userData: User): Observable<any>{
     return this.http
       .put<any>(
-        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/updateUsuario`,usuarioData)
+        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/update?idUser=${userId}`,userData)
       .pipe(catchError(this.handleError));
+  }
+
+  updateSimulation(userId: number, userData: User): Observable<any> {
+    const index = this.users.findIndex(u => u.id === userId);
+    if (index !== -1) {
+      this.users[index] = {
+        ...this.users[index],
+        ...userData
+      };
+      return of({ message: 'Usuario actualizado correctamente' }).pipe(delay(500));
+    } else {
+      return throwError(() => new Error('Usuario no encontrado'));
+    }
   }
 
   updatePerfil(usuarioData: DataUser): Observable<any>{

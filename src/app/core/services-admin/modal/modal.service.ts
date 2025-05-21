@@ -5,19 +5,21 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ModalService {
-  private editData = new BehaviorSubject<any | null>(null);
-
-  constructor() {}
+  private modalData = new BehaviorSubject<{ mode: 'create' | 'edit', data: any | null } | null>(null);
 
   openModalWithData(data: any) {
-    this.editData.next(data);
+    this.modalData.next({ mode: 'edit', data });
   }
 
-  getModalData(): Observable<any> {
-    return this.editData.asObservable();
+  openModalForCreation() {
+    this.modalData.next({ mode: 'create', data: null });
+  }
+
+  getModalData(): Observable<{ mode: 'create' | 'edit', data: any | null } | null> {
+    return this.modalData.asObservable();
   }
 
   closeModal() {
-    this.editData.next(null);
+    this.modalData.next(null);
   }
 }

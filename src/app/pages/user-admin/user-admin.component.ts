@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { DataTableComponent } from '../../shared/components-admin/data-table/data-table.component';
 import { DataTableColumn } from '../../core/models/datatable-column.model';
 import { UserService } from '../../core/services-admin/user/user.service';
-import { ModalUserFormComponent } from './modal-user-form/modal-user-form.component';
 import { PaginationTableComponent } from '../../shared/components-admin/pagination-table/pagination-table.component';
 import { SearchTableComponent } from '../../shared/components-admin/search-table/search-table.component';
 import { DateRangeTableComponent } from '../../shared/components-admin/date-range-table/date-range-table.component';
 import { User } from '../../core/models/user.model';
 import { Observable } from 'rxjs';
 import { Page } from '../../core/models/pageable.model';
+import { ModalService } from '../../core/services-admin/modal/modal.service';
+import { ModalUserFormComponent } from './modal-user-form/modal-user-form.component';
 
 @Component({
   selector: 'app-user-admin',
@@ -28,10 +29,11 @@ export class UserAdminComponent {
   searchText: {searchInput: string, isSearch: boolean} = {searchInput: '', isSearch: false};
 
   userService = inject(UserService);
+  modalService = inject(ModalService);
 
   columns: DataTableColumn[] = [
     { label: 'Nombre', dataKey: 'name' },
-    { label: 'Apellido', dataKey: 'last_name' },
+    { label: 'Apellido', dataKey: 'lastname' },
     { label: 'Correo', dataKey: 'email'},
     { label: 'Telefono', dataKey: 'phone' },
     { label: 'Rol', dataKey: 'role' },
@@ -43,6 +45,10 @@ export class UserAdminComponent {
 
   ngOnInit(): void {
     this.loadUsers();
+  }
+
+  openModalRegister() {
+    this.modalService.openModalForCreation(); 
   }
 
   loadUsers() {

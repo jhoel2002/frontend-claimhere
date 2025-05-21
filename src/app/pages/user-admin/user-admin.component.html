@@ -1,4 +1,13 @@
-<h2 class="text-3xl mb-4 dark:text-gray-700 font-bold">Usuarios</h2>
+<div class="flex items-center justify-between mb-4">
+  <h2 class="text-3xl dark:text-gray-700 font-bold">Usuarios</h2>
+  
+  <!-- Botón Registrar -->
+  <button 
+    (click)="openModalRegister()"
+    class="ml-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
+    + Registrar
+  </button>
+</div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
     <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 gap-y-4">
         <app-date-range-table (dateRangeSelected)="handleDateRange($event)" (dateRangeCleared)="handleCancelDateFilter()"></app-date-range-table>
@@ -14,4 +23,3 @@
     [currentPage]="pageNumber"
     (pageChange)="onPageChange($event)">
 </app-pagination-table>
-<!-- <app-modal-empleados-form-update (dataUpdated)="reloadData()"></app-modal-empleados-form-update> -->

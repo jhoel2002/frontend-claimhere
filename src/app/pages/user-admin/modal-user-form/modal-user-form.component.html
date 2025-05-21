@@ -5,9 +5,9 @@
   <!-- Modal -->
   <div class="relative bg-white rounded-lg shadow-xl w-full max-w-4xl m-4 animate-modal-up p-8">
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b">
+    <div class="flex items-center justify-between p-4">
       <h3 class="text-xl font-semibold text-gray-900">
-        {{ modalData?.titulo }}
+        {{ modalPayload?.mode}} Usuario
       </h3>
       <button 
         (click)="close()"
@@ -20,102 +20,133 @@
     </div>
     
     <!-- Content -->
-    <form [formGroup]="form">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Rol de usuario -->
-        <div class="form-group">
-          <label for="rol-usuario" class="text-sm font-medium text-gray-700 ">Rol del usuario:</label>
-          <select id="rol-usuario" formControlName="rol" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option selected value="">Seleccione un rol</option>
-            <option value="Administrador">Administrador</option>
-            <option value="Empleado">Empleado</option>
-          </select>
-          <div *ngIf="rol?.invalid && rol?.touched" class="text-red-600 text-xs">
-            <div *ngIf="rol?.errors?.['required']">El rol es requerido.</div>
+    <form [formGroup]="form" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Columna izquierda -->
+        <div class="space-y-4">
+          <!-- Nombres -->
+          <div class="form-group">
+            <label for="name-user" class="text-sm font-medium text-gray-700 ">Nombres:</label>
+            <input type="text" id="name-user" formControlName="name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="name?.invalid && name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="name?.errors?.['required']">Los nombres son requeridos.</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Nombres -->
-        <div class="form-group">
-          <label for="nombres-de-usuario" class="text-sm font-medium text-gray-700 ">Nombres:</label>
-          <input type="text" id="nombres-de-usuario" formControlName="nombres" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <div *ngIf="nombres?.invalid && nombres?.touched" class="text-red-600 text-xs">
-            <div *ngIf="nombres?.errors?.['required']">Los nombres son requeridos.</div>
+          <!-- Apellidos -->
+          <div class="form-group">
+            <label for="lastname-user" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
+            <input type="text" id="lastname-user" formControlName="lastname" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="lastname?.invalid && lastname?.touched" class="text-red-600 text-xs">
+              <div *ngIf="lastname?.errors?.['required']">Los apellidos son requeridos.</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Apellidos -->
-        <div class="form-group">
-          <label for="apellidos-de-usuario" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
-          <input type="text" id="apellidos-de-usuario" formControlName="apellidos" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <div *ngIf="apellidos?.invalid && apellidos?.touched" class="text-red-600 text-xs">
-            <div *ngIf="apellidos?.errors?.['required']">Los apellidos son requeridos.</div>
+          <!-- Direccion -->
+          <div class="form-group">
+            <label for="address-user" class="text-sm font-medium text-gray-700 ">Direccion:</label>
+            <input type="text" id="address-user" formControlName="address" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="address?.invalid && address?.touched" class="text-red-600 text-xs">
+              <div *ngIf="address?.errors?.['required']">La direccion es requerido.</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Tipo de Documento -->
-        <div class="form-group">
-          <label for="tipoDocIdentidad" class="text-sm font-medium text-gray-700 ">Tipo de documento:</label>
-          <select id="tipoDocIdentidad" formControlName="tipoDocIdentidad" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option selected value="">Seleccione un tipo de documento</option>
-            <option value="DNI">DNI</option>
-            <option value="PASAPORTE">PASAPORTE</option>
-            <option value="CE">CARNET EXT.</option>
-          </select>
-          <div *ngIf="tipoDocIdentidad?.invalid && tipoDocIdentidad?.touched" class="text-red-600 text-xs">
-            <div *ngIf="tipoDocIdentidad?.errors?.['required']">El tipo de documento es requerido.</div>
+          <!-- telefono -->
+          <div class="form-group">
+            <label for="phone-user" class="text-sm font-medium text-gray-700 ">Telefono:</label>
+            <input type="text" id="phone-user" formControlName="phone" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="phone?.invalid && phone?.touched" class="text-red-600 text-xs">
+              <div *ngIf="phone?.errors?.['required']">El telefono es requerido.</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Documento -->
-        <div class="form-group">
-          <label for="docIdentidad" class="text-sm font-medium text-gray-700 ">Documento:</label>
-          <input type="text" id="docIdentidad" formControlName="docIdentidad" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <div *ngIf="docIdentidad?.invalid && docIdentidad?.touched" class="text-red-600 text-xs">
-            <div *ngIf="docIdentidad?.errors?.['required']">El documento es requerido.</div>
-            <div *ngIf="docIdentidad?.errors?.['invalidNumberDNI']">El DNI debe tener solo números.</div>
-            <div *ngIf="docIdentidad?.errors?.['invalidDigitosDNI']">El DNI debe tener 8 dígitos.</div>
-            <div *ngIf="docIdentidad?.errors?.['invalidPassportOrCarnet']">El documento debe tener como máximo 20 caracteres.</div>
+          <!-- Tipo de Documento -->
+          <!-- <div class="form-group">
+            <label for="tipoDocIdentidad" class="text-sm font-medium text-gray-700 ">Tipo de documento:</label>
+            <select id="tipoDocIdentidad" formControlName="tipoDocIdentidad" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option selected value="">Seleccione un tipo de documento</option>
+              <option value="DNI">DNI</option>
+              <option value="PASAPORTE">PASAPORTE</option>
+              <option value="CE">CARNET EXT.</option>
+            </select>
+            <div *ngIf="tipoDocIdentidad?.invalid && tipoDocIdentidad?.touched" class="text-red-600 text-xs">
+              <div *ngIf="tipoDocIdentidad?.errors?.['required']">El tipo de documento es requerido.</div>
+            </div>
+          </div> -->
+
+          <!-- Documento -->
+          <!-- <div class="form-group">
+            <label for="docIdentidad" class="text-sm font-medium text-gray-700 ">Documento:</label>
+            <input type="text" id="docIdentidad" formControlName="docIdentidad" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="docIdentidad?.invalid && docIdentidad?.touched" class="text-red-600 text-xs">
+              <div *ngIf="docIdentidad?.errors?.['required']">El documento es requerido.</div>
+              <div *ngIf="docIdentidad?.errors?.['invalidNumberDNI']">El DNI debe tener solo números.</div>
+              <div *ngIf="docIdentidad?.errors?.['invalidDigitosDNI']">El DNI debe tener 8 dígitos.</div>
+              <div *ngIf="docIdentidad?.errors?.['invalidPassportOrCarnet']">El documento debe tener como máximo 20 caracteres.</div>
+            </div>
+          </div> -->
+        </div> 
+
+        <!-- Columna derecha -->
+        <div class="space-y-4">
+          <!-- Rol de usuario -->
+          <div class="form-group">
+            <label for="role-user" class="text-sm font-medium text-gray-700 ">Rol del usuario:</label>
+            <select id="role-user" formControlName="role" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option selected value="">Seleccione un rol</option>
+              <option value="Admin">Administrador</option>
+              <option value="Empleado">Empleado</option>
+            </select>
+            <div *ngIf="role?.invalid && role?.touched" class="text-red-600 text-xs">
+              <div *ngIf="role?.errors?.['required']">El rol es requerido.</div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <!-- Correo -->
-        <div class="form-group">
-          <label for="correo-usuario" class="text-sm font-medium text-gray-700 ">Correo:</label>
-          <input type="text" id="correo-usuario" formControlName="correoUsuario" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <div *ngIf="correoUsuario?.invalid && correoUsuario?.touched" class="text-red-600 text-xs">
-            <div *ngIf="correoUsuario?.errors?.['required']">El correo es requerido.</div>
-            <div *ngIf="correoUsuario?.errors?.['email']">Ingresa un correo electrónico válido.</div>
+          <!-- Correo -->
+          <div class="form-group">
+            <label for="email-user" class="text-sm font-medium text-gray-700 ">Correo:</label>
+            <input type="text" id="email-user" formControlName="email" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="email?.invalid && email?.touched" class="text-red-600 text-xs">
+              <div *ngIf="email?.errors?.['required']">El correo es requerido.</div>
+              <div *ngIf="email?.errors?.['email']">Ingresa un correo electrónico válido.</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Contraseña -->
-        <div class="form-group">
-          <label for="password-usuario" class="text-sm font-medium text-gray-700 ">Contraseña:</label>
-          <input type="password" id="password-usuario" formControlName="passwordUsuario" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <div *ngIf="passwordUsuario?.invalid && passwordUsuario?.touched" class="text-red-600 text-xs">
-            <div *ngIf="passwordUsuario?.errors?.['required']">La contraseña es requerida.</div>
+          <div *ngIf="!isEditMode || (isEditMode && showChangePassword?.value)">
+             <!-- Contraseña -->
+            <div class="form-group">
+              <label for="password-user" class="text-sm font-medium text-gray-700 ">Contraseña:</label>
+              <input type="password" id="password-user" formControlName="password" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div *ngIf="password?.invalid && password?.touched" class="text-red-600 text-xs">
+                <div *ngIf="password?.errors?.['required']">La contraseña es requerida.</div>
+              </div>
+            </div>
+
+            <!-- Confirmar Contraseña -->
+            <div class="form-group">
+              <label for="confirmation-password-user" class="text-sm font-medium text-gray-700 ">Confirmar contraseña:</label>
+              <input type="password" id="confirmation-password-user" formControlName="confirmationPassword" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div *ngIf="confirmationPassword?.invalid && confirmationPassword?.touched" class="text-red-600 text-xs">
+                <div *ngIf="confirmationPassword?.errors?.['required']">La confirmación de la contraseña es requerida.</div>
+                <div *ngIf="confirmationPassword?.errors?.['passwordMismatch']">Las contraseñas no coinciden.</div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Confirmar Contraseña -->
-        <div class="form-group">
-          <label for="confirmacion-password-usuario" class="text-sm font-medium text-gray-700 ">Confirmar contraseña:</label>
-          <input type="password" id="confirmacion-password-usuario" formControlName="confirmacionPassword" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <div *ngIf="confirmacionPassword?.invalid && confirmacionPassword?.touched" class="text-red-600 text-xs">
-            <div *ngIf="confirmacionPassword?.errors?.['required']">La confirmación de la contraseña es requerida.</div>
-            <div *ngIf="confirmacionPassword?.errors?.['passwordMismatch']">Las contraseñas no coinciden.</div>
+          <div *ngIf="isEditMode" class="flex items-center space-x-2 mb-4">
+            <input type="checkbox" id="showChangePassword-user" formControlName="showChangePassword" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+            <label for="showChangePassword-user" class="text-sm text-gray-700">
+              ¿Desea cambiar la contraseña de este usuario?
+            </label>
           </div>
         </div>
       </div>
     </form>
     
     <!-- Footer -->
-    <div class="flex items-center justify-end gap-2 p-4 border-t dark:border-gray-700">
+    <div class="flex items-center justify-end gap-2 p-4 dark:border-gray-700">
       <button (click)="close()" class="px-4 py-2 text-sm text-black hover:bg-slate-100 rounded-md bg-gray-300">Cancelar</button>
-      <button (click)="close()" [disabled]="form.invalid" class="px-4 py-2 text-sm text-black bg-blue-600 hover:bg-green-700 rounded-md">Guardar</button>
+      <button (click)="onSubmit()" class="px-4 py-2 text-sm text-black bg-blue-600 hover:bg-green-700 rounded-md">Guardar</button>
     </div>
   </div>
 </div>

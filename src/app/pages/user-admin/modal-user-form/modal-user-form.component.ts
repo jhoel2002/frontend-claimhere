@@ -16,48 +16,115 @@ import { ModalService } from '../../../core/services-admin/modal/modal.service';
 export class ModalUserFormComponent implements OnInit {
 
   form!: FormGroup;
-    @Output() valueForm = new EventEmitter();
+  @Output() valueForm = new EventEmitter();
 
-    tipoDocumentoSeleccionado: string = '';
-    score: number = 0;
+  isEditMode = false;
+
+  // tipoDocumentoSeleccionado: string = '';
+  // score: number = 0;
+
+  modalPayload: { mode: 'create' | 'edit', data: any | null } | null = null;
   
-    constructor(
-      private fb: FormBuilder,
-      private userService: UserService,
-      private alertService: AlertService,
-      private modalService: ModalService,
-      private cdr: ChangeDetectorRef
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private alertService: AlertService,
+    private modalService: ModalService,
     ) {
-      this.createForm();
-    }
+    this.createForm();
+  }
+
+  ngOnInit(): void {
+    this.modalService.getModalData().subscribe(payload => {
+      this.modalPayload = payload;
+      if (payload) {
+        this.isEditMode = payload.mode === 'edit';
+        if (this.isEditMode) {
+          this.fillForm(payload.data);
+          this.changeValidations();
+        } else {
+          this.form.reset();
+          this.form.markAsPristine();
+          this.form.markAsUntouched();
+          this.confirmationPassword?.setValidators([Validators.required, this.confirmPasswordValidator.bind(this)]);
+          this.password?.setValidators([Validators.required]);
+        }
+      }
+    });
+  }
+
+  changeValidations() {
+    // Escuchar checkbox
+    this.showChangePassword?.valueChanges.subscribe(checked => {
+      if (checked) {
+        this.password?.setValidators([Validators.required]);
+        this.confirmationPassword?.setValidators([Validators.required, this.confirmPasswordValidator.bind(this)]);
+      } else {
+        // Limpiar campos, errores y validaciones
+        this.password?.reset();
+        this.confirmationPassword?.reset();
+
+        this.password?.clearValidators();
+        this.confirmationPassword?.clearValidators();
+      }
+      this.password?.updateValueAndValidity();
+      this.confirmationPassword?.updateValueAndValidity();
+    });
+  }
+
+
+  fillForm(data: any) {
+    this.form.patchValue({
+      name: data.name,
+      lastname: data.lastname,
+      address: data.address,
+      phone: data.phone,
+      email: data.email,
+      role: data.role
+    });
+  }
+
+  close() {
+    this.form.reset();
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+    this.modalService.closeModal();
+  }
+
+  isOpen(): boolean {
+    return this.modalPayload !== null;
+  }
 
   private createForm() {
     this.form = this.fb.group({
-      nombres: ['', Validators.required],
-      apellidos: ['', Validators.required],
-      tipoDocIdentidad: ['', [Validators.required]],
-      docIdentidad: [
-        '',
-        [
-          Validators.required,
-          CustomValidations.invalidDocument(this.tipoDocumentoSeleccionado),
-        ],
-      ],
-      correoUsuario: ['', [Validators.required, Validators.email]],
-      passwordUsuario: ['', 
+      name: ['', Validators.required],
+      lastname: ['', Validators.required],
+      address: ['', Validators.required],
+      phone: ['', Validators.required],
+      // tipoDocIdentidad: ['', [Validators.required]],
+      // docIdentidad: [
+      //   '',
+      //   [
+      //     Validators.required,
+      //     CustomValidations.invalidDocument(this.tipoDocumentoSeleccionado),
+      //   ],
+      // ],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', 
         [
           Validators.required,
           // this.validarFortalezaPassword.bind(this)
         ]
       ],
-      confirmacionPassword: ['', [Validators.required, this.confirmPasswordValidator.bind(this)]],
-      rol: ['', Validators.required]
+      confirmationPassword: ['', [Validators.required, this.confirmPasswordValidator.bind(this)]],
+      role: ['', Validators.required],
+      showChangePassword: [false]
     });
 
-    this.tipoDocIdentidad?.valueChanges.subscribe((tipo) => {
-      this.tipoDocumentoSeleccionado = tipo;
-      this.updateDocIdentidadValidation();
-    });
+    // this.tipoDocIdentidad?.valueChanges.subscribe((tipo) => {
+    //   this.tipoDocumentoSeleccionado = tipo;
+    //   this.updateDocIdentidadValidation();
+    // });
   }
 
   // onStrengthChange(score: number){
@@ -71,92 +138,116 @@ export class ModalUserFormComponent implements OnInit {
   // }
 
   confirmPasswordValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const password = this.form?.get('passwordUsuario')?.value;
+    const password = this.form?.get('password')?.value;
     const confirmPassword = control.value;
   
     return password === confirmPassword ? null : { 'passwordMismatch': true };
   }
 
-  updateDocIdentidadValidation() {
-    if (this.docIdentidad) {
-      this.docIdentidad.setValidators([
-        Validators.required,
-        CustomValidations.invalidDocument(this.tipoDocumentoSeleccionado),
-      ]);
-      this.docIdentidad.updateValueAndValidity();
-    }
-  }
+  // updateDocIdentidadValidation() {
+  //   if (this.docIdentidad) {
+  //     this.docIdentidad.setValidators([
+  //       Validators.required,
+  //       CustomValidations.invalidDocument(this.tipoDocumentoSeleccionado),
+  //     ]);
+  //     this.docIdentidad.updateValueAndValidity();
+  //   }
+  // }
 
-  onSubmit() {
+  // onSubmit() {
+  //   if (this.form.invalid) {
+  //     this.form.markAllAsTouched();
+  //     return;
+  //   }
+  //   const formData = this.form.value;
+  //   this.userService.register(formData).subscribe({
+  //     next: () => {
+  //       this.alertService.success({
+  //         message: 'Usuario Registrado Correctamente.',
+  //       }).then(() => {
+  //         this.valueForm.emit();
+  //         this.close();
+  //       });
+  //     },
+  //     error: (error) => {
+  //       this.alertService.error({
+  //         message: error,
+  //       });
+  //     },
+  //   });
+  // }
+
+  onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+
     const formData = this.form.value;
-    this.userService.register(formData).subscribe({
+
+    const request$ = this.modalPayload?.mode === 'edit'
+      ? this.userService.updateSimulation(this.modalPayload.data.id, formData)
+      : this.userService.registerSimulation(formData);
+
+    request$.subscribe({
       next: () => {
-        this.alertService.success({
-          message: 'Usuario Registrado Correctamente.',
-        }).then(() => {
-          this.form.reset();
+        const successMessage = this.modalPayload?.mode === 'edit'
+          ? 'Usuario actualizado correctamente.'
+          : 'Usuario registrado correctamente.';
+
+        this.alertService.success({ message: successMessage }).then(() => {
           this.valueForm.emit();
-          //$(this.modal?.nativeElement).modal('hide'); // Cerrar el modal usando jQuery
+          this.close();
         });
       },
-      error: (error) => {
-        this.alertService.error({
-          message: error,
-        });
-      },
+      error: (error: any) => {
+        this.alertService.error({ message: error });
+      }
     });
   }
 
-  modalData: any;
-
-  ngOnInit(): void {
-    this.modalService.getModalData().subscribe(data => {
-      this.modalData = data;
-    });
+  get showChangePassword(){
+    return this.form.get('showChangePassword');
   }
 
-  close() {
-    this.modalService.closeModal();
+  get name() {
+    return this.form.get('name');
   }
 
-  isOpen(): boolean {
-    return this.modalData !== null;
+  get lastname() {
+    return this.form.get('lastname');
   }
 
-  get nombres() {
-    return this.form.get('nombres');
+  get email() {
+    return this.form.get('email');
   }
 
-  get apellidos() {
-    return this.form.get('apellidos');
+  get address() {
+    return this.form.get('address');
   }
 
-  get tipoDocIdentidad() {
-    return this.form.get('tipoDocIdentidad');
+  get phone() {
+    return this.form.get('phone');
   }
 
-  get docIdentidad() {
-    return this.form.get('docIdentidad');
+  // get tipoDocIdentidad() {
+  //   return this.form.get('tipoDocIdentidad');
+  // }
+
+  // get docIdentidad() {
+  //   return this.form.get('docIdentidad');
+  // }
+
+  get password(){
+    return this.form.get('password');
   }
 
-  get passwordUsuario(){
-    return this.form.get('passwordUsuario');
+  get confirmationPassword(){
+    return this.form.get('confirmationPassword');
   }
 
-  get confirmacionPassword(){
-    return this.form.get('confirmacionPassword');
-  }
-
-  get correoUsuario() {
-    return this.form.get('correoUsuario');
-  }
-
-  get rol() {
-    return this.form.get('rol');
+  get role() {
+    return this.form.get('role');
   }
 
 }
