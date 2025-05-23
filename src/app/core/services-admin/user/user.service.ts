@@ -31,7 +31,7 @@ export class UserService {
     })()
   }));
 
-  getAll(page: number, size: number): Observable<any> {
+  getAll(page: number, size: number): Observable<Page<User>> {
     const params = new HttpParams().set('page', page.valueOf()).set('size', size.valueOf());
     const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}`;
       return this.http.get<any>(url, {params: params})
@@ -58,14 +58,14 @@ export class UserService {
     });
   }
 
-  search(searchText: string, page: number, size: number): Observable<any> {
+  search(searchText: string, page: number, size: number): Observable<Page<User>> {
     const params = new HttpParams().set('search', searchText).set('page', page.valueOf()).set('size', size.valueOf());
     const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/search`;
       return this.http.get<any>(url, { params })
         .pipe(catchError(this.handleError));
   }
 
-  searchSimulation(searchText: string, page: number, size: number): Observable<any> {
+  searchSimulation(searchText: string, page: number, size: number): Observable<Page<User>> {
     const filtered = this.users.filter(u =>
       u.name.toLowerCase().includes(searchText.toLowerCase()) ||
       u.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -77,12 +77,13 @@ export class UserService {
     return of({
       content,
       totalPages: Math.ceil(filtered.length / size),
+      size: size,
       number: page,
       totalElements: filtered.length
     });
   }
 
-  getUsersByDateRange(start: string, end: string, page: number, size: number): Observable<any> {
+  getUsersByDateRange(start: string, end: string, page: number, size: number): Observable<Page<User>> {
     const params = new HttpParams().set('start', start).set('end', end).set('page', page.valueOf()).set('size', size.valueOf());
     const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/date-range`;
       return this.http.get<any>(url, { params })
@@ -95,20 +96,18 @@ export class UserService {
     }
 
     if (typeof dateInput === 'string') {
-      // suponiendo formato dd/mm/yyyy
       const parts = dateInput.split('/');
       if (parts.length === 3) {
         const [day, month, year] = parts;
         return `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
       }
-      // si no es el formato esperado, devolver tal cual o lanzar error
       return dateInput;
     }
     throw new Error('Invalid date input');
   }
 
 
-  getUsersByDateRangeSimulation(start: string, end: string, page: number, size: number): Observable<any> {
+  getUsersByDateRangeSimulation(start: string, end: string, page: number, size: number): Observable<Page<User>> {
     const startISO = this.convertToISO(start);
     const endISO = this.convertToISO(end);
 
@@ -129,19 +128,20 @@ export class UserService {
     return of({
       content,
       totalPages: Math.ceil(filtered.length / size),
+      size: size,
       number: page,
       totalElements: filtered.length
     });
   }
 
-  getUsersBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number): Observable<any> {
+  getUsersBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number): Observable<Page<User>> {
     const params = new HttpParams().set('searchText', searchText).set('start', start).set('end', end).set('page', page.valueOf()).set('size', size.valueOf());
     const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/date-search`;
       return this.http.get<any>(url, { params })
         .pipe(catchError(this.handleError));
   }
 
-  getUsersBySearchAndDateSimulation(searchText: string, start: string, end: string, page: number, size: number): Observable<any> {
+  getUsersBySearchAndDateSimulation(searchText: string, start: string, end: string, page: number, size: number): Observable<Page<User>> {
     const startISO = this.convertToISO(start);
     const endISO = this.convertToISO(end);
 
@@ -168,6 +168,7 @@ export class UserService {
     return of({
       content,
       totalPages: Math.ceil(filtered.length / size),
+      size: size,
       number: page,
       totalElements: filtered.length
     });

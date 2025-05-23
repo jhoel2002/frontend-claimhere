@@ -1,0 +1,33 @@
+<div class="flex items-center justify-between mb-4">
+  <h2 class="text-3xl text-gray-700 font-bold">{{ title }}</h2>
+  <button 
+    (click)="triggerRegister()"
+    class="ml-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
+    + Registrar
+  </button>
+</div>
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+  <div class="flex flex-col sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 gap-y-4">
+    <app-date-range-table 
+      (dateRangeSelected)="handleDateRange($event)" 
+      (dateRangeCleared)="handleCancelDateFilter()">
+    </app-date-range-table>
+
+    <app-search-table 
+      (onSearch)="handleSearch($event)" 
+      (noSearch)="handleCancelSearchFilter()">
+    </app-search-table>
+  </div>
+
+  <app-data-table 
+    [columns]="columns" 
+    [data]="pageable.content">
+  </app-data-table>
+</div>
+
+<app-pagination-table
+  [totalPages]="pageable.totalPages"
+  [currentPage]="pageable.number"
+  (pageChange)="onPageChange($event)">
+</app-pagination-table>

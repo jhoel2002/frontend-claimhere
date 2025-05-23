@@ -5,25 +5,25 @@ import { CustomerAdminComponent } from './customer-admin/customer-admin.componen
 import { NotFoundComponent } from './not-found/not-found.component';
 
 export const PAGE_ROUTES: Routes = [
-      {
-        path: 'company',
-        component: CompanyAdminComponent,
-      },
-      {
-        path: 'user',
-        component: UserAdminComponent,
-      },
-      {
-        path: 'customer',
-        component: CustomerAdminComponent,
-      },
-      {
-        path: 'request',
-        loadChildren: () => import('./request-admin/request-routing.routes').then(m => m.
-          REQUEST_ROUTES),
-      },
-      {
-        path: '**',
-        component: NotFoundComponent
-      }
+  {
+    path: 'company',
+    component: CompanyAdminComponent,
+  },
+  {
+    path: 'user',
+    component: UserAdminComponent,
+  },
+  {
+    path: 'customer',
+    component: CustomerAdminComponent,
+  },
+  {
+    path: 'request',
+    loadChildren: () => import('./request-admin/request-routing.routes').then(m => m.
+      REQUEST_ROUTES),
+  },
+  {
+    path: '**',
+    component: NotFoundComponent
+  }
 ];

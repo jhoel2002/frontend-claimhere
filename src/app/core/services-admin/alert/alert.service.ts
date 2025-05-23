@@ -20,7 +20,7 @@ export class AlertService {
       text: message || 'La acción se completó con éxito.',
       html: html || ``,
       confirmButtonText: `Aceptar`,
-      confirmButtonColor: '#ff5220',
+      confirmButtonColor: '#005792',
     });
   }
 
@@ -43,12 +43,31 @@ export class AlertService {
       title: '¿Estás seguro?',
       text: 'No podrás revertir esta acción',
       icon: 'warning',
-      confirmButtonColor: '#ff5220',
+      confirmButtonColor: '#005792',
       confirmButtonText: confirmText || 'Sí, hazlo!',
       showCancelButton: true,
       cancelButtonColor: '#5a6268',
       cancelButtonText: 'Cancelar',
       reverseButtons: true,
+    });
+  }
+
+info({
+    title,
+    message,
+    html,
+  }: {
+    title?: string;
+    message?: string;
+    html?: string;
+  }): Promise<any> {
+    return Swal.fire({
+      icon: 'info',
+      title: title || 'Información',
+      text: message || '',
+      html: html || '',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#005792',
     });
   }
 }

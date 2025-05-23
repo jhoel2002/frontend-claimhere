@@ -4,7 +4,4 @@ export interface Page<T> {
   totalPages: number;
   number: number;      // página actual (0-based)
   size: number;        // tamaño de página
-  first: boolean;
-  last: boolean;
-  empty: boolean;
 }
