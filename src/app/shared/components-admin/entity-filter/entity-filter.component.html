@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between mb-4">
   <h2 class="text-3xl text-gray-700 font-bold">{{ title }}</h2>
-  <button 
+  <button *ngIf="!isRequest"
     (click)="triggerRegister()"
     class="ml-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
     + Registrar
@@ -21,8 +21,10 @@
   </div>
 
   <app-data-table 
+    [isRequest]="isRequest"
     [columns]="columns" 
-    [data]="pageable.content">
+    [data]="pageable.content"
+    [entity]="entity">
   </app-data-table>
 </div>
 

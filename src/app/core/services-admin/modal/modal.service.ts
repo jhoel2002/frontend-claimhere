@@ -1,21 +1,34 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ModalEntityType } from '../../models/modal-entity-type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModalService {
-  private modalData = new BehaviorSubject<{ mode: 'create' | 'edit', data: any | null } | null>(null);
+  private modalData = new BehaviorSubject<{
+    mode: 'create' | 'edit' | 'view',
+    data: any | null,
+    entity: ModalEntityType
+  } | null>(null);
 
-  openModalWithData(data: any) {
-    this.modalData.next({ mode: 'edit', data });
+  openModalForCreation(entity: ModalEntityType) {
+    this.modalData.next({ mode: 'create', data: null, entity });
   }
 
-  openModalForCreation() {
-    this.modalData.next({ mode: 'create', data: null });
+  openModalWithData(data: any, entity: ModalEntityType) {
+    this.modalData.next({ mode: 'edit', data, entity });
   }
 
-  getModalData(): Observable<{ mode: 'create' | 'edit', data: any | null } | null> {
+  openModalView(data: any, entity: ModalEntityType) {
+    this.modalData.next({ mode: 'view', data, entity });
+  }
+
+  getModalData(): Observable<{
+    mode: 'create' | 'edit' | 'view',
+    data: any | null,
+    entity: ModalEntityType
+  } | null> {
     return this.modalData.asObservable();
   }
 

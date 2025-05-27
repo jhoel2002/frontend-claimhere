@@ -5,6 +5,7 @@ import { DataTableColumn } from '../../../core/models/datatable-column.model';
 import { RequestService } from '../../../core/services-admin/request/request.service';
 import { ModalService } from '../../../core/services-admin/modal/modal.service';
 import { DropdownActionTableComponent } from "../dropdown-action-table/dropdown-action-table.component";
+import { ModalEntityType } from '../../../core/models/modal-entity-type';
 
 @Component({
   selector: 'app-data-table',
@@ -21,6 +22,7 @@ export class DataTableComponent {
   @Input() isRequest = false;
   @Input() columns: DataTableColumn[] = [];
   @Input() data: any[] = [];
+  @Input() entity!: ModalEntityType;
 
   @Input() estadoPendiente: boolean = false;
   @Input() estadoAceptado: boolean = false;
@@ -30,12 +32,12 @@ export class DataTableComponent {
 
   @Output() itemDelete = new EventEmitter<any>();
 
-  viewRequest(caseId: any) {
-    this.caseService.setCurrentRequestId(caseId);
+  viewRequest(item: any) {
+    this.modalService.openModalWithData(item, this.entity);
   }
 
   editItem(item: any) {
-    this.modalService.openModalWithData(item);
+    this.modalService.openModalWithData(item, this.entity);
   }
 
   deleteItem(item: any){

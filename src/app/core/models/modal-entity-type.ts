@@ -1,0 +1,1 @@
+export type ModalEntityType = 'customer' | 'user' | 'case-request' | 'evidence';

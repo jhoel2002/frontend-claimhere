@@ -1,12 +1,13 @@
 <app-entity-filter
   [title]="'Usuarios'"
   [columns]="columns"
-  [fetchFunction]="loadUsers"
+  [fetchFunction]="loadCustomers"
   (onRegister)="openModalRegister()"
+  [entity]="entity"
   #updateTable>
 </app-entity-filter>
 
-<app-modal-user-form (valueForm)="updateTable.onReload()"></app-modal-user-form>
+<app-modal-user-form [userService]="userService" (valueForm)="updateTable.onReload()"></app-modal-user-form>
 <!-- <div class="flex items-center justify-between mb-4">
   <h2 class="text-3xl text-gray-700 font-bold">Usuarios</h2>
   <button 

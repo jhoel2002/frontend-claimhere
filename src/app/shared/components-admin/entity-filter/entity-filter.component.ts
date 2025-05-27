@@ -6,18 +6,22 @@ import { DataTableComponent } from '../data-table/data-table.component';
 import { DateRangeTableComponent } from '../date-range-table/date-range-table.component';
 import { SearchTableComponent } from '../search-table/search-table.component';
 import { PaginationTableComponent } from '../pagination-table/pagination-table.component';
+import { ModalEntityType } from '../../../core/models/modal-entity-type';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-entity-filter',
   standalone: true,
-  imports: [DataTableComponent, DateRangeTableComponent, SearchTableComponent, PaginationTableComponent],
+  imports: [DataTableComponent, DateRangeTableComponent, SearchTableComponent, PaginationTableComponent, NgIf],
   templateUrl: './entity-filter.component.html',
   styleUrls: ['./entity-filter.component.css']
 })
 export class EntityFilterComponent<T> implements OnInit {
 
+  @Input() isRequest = false;
   @Input() title: string = '';
   @Input() columns: DataTableColumn[] = [];
+  @Input() entity!: ModalEntityType;
   @Input() fetchFunction!: (
     search: string,
     start: string,

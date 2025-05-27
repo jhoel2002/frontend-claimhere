@@ -51,15 +51,23 @@ export class DateRangeTableComponent {
   }
 
   applyDateRange() {
-    const selectedDates = this.datepickerInstance.getDates();
-    if (this.datepickerInstance.getDates()) {
-      this.startDate = selectedDates[0];
-      this.endDate = selectedDates[1];
+    const selectedDates: string[] = this.datepickerInstance.getDates();
+    if (selectedDates && selectedDates.length === 2) {
+      const startDateObj = new Date(selectedDates[0]);
+      const endDateObj = new Date(selectedDates[1]);
+      this.startDate = this.formatDate(startDateObj);
+      this.endDate = this.formatDate(endDateObj);
       this.filterApplied = true;
       this.dateRangeSelected.emit({ start: this.startDate, end: this.endDate, filterApplied: this.filterApplied });
     }
   }
 
+  formatDate(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
   clearDateRange() {
     this.startDate = '';
     this.endDate = '';

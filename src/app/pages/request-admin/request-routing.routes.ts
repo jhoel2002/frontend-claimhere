@@ -7,17 +7,17 @@ import { NotFoundComponent } from '../not-found/not-found.component';
 export const REQUEST_ROUTES: Routes = [
       {
         path: 'pending',
-        title: 'Claim Here | Reclamos Pendientes',
+        title: 'Claim Here | Solicitudes Pendientes',
         component: PendingRequestComponent,
       },
       {
         path: 'accepted',
-        title: 'Claim Here | Reclamos Aceptados',
+        title: 'Legal Code | Solicitudes Aceptados',
         component: AcceptedRequestComponent,
       },
       {
         path: 'rejected',
-        title: 'Claim Here | Reclamos Rechazados',
+        title: 'Claim Here | Solicitudes Rechazados',
         component: RejectedRequestComponent,
       },
       {

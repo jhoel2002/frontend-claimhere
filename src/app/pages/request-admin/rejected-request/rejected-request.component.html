@@ -1,4 +1,10 @@
-<h2 class="text-3xl mb-4 dark:text-gray-700 font-bold">Reclamos Rechazados</h2>
-<app-data-table 
-    [columns]="columns" 
-    [data]="data"></app-data-table>
+<app-entity-filter
+  [title]="'Solicitudes rechazadas'"
+  [columns]="columns"
+  [fetchFunction]="loadUsers"
+  [entity]="entity"
+  [isRequest]="isRequest"
+  #updateTable>
+</app-entity-filter>
+
+<app-modal-request-view [requestService]="requestService"></app-modal-request-view>

@@ -1,4 +1,10 @@
-<h2 class="text-3xl mb-4 dark:text-gray-700 font-bold">Clientes</h2>
-<app-data-table 
-    [columns]="columns" 
-    [data]="data"></app-data-table>
+<app-entity-filter
+  [title]="'Customer'"
+  [columns]="columns"
+  [fetchFunction]="loadUsers"
+  (onRegister)="openModalRegister()"
+  [entity]="entity"
+  #updateTable>
+</app-entity-filter>
+
+<app-modal-customer-form [customerService]="customerService" (valueForm)="updateTable.onReload()"></app-modal-customer-form>

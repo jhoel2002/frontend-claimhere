@@ -1,0 +1,23 @@
+<div
+  class="cursor-pointer rounded-xl shadow-lg text-center mb-4 transition hover:shadow-xl"
+  (click)="downloadFile(evidence.idEvidencia)"
+>
+  <div class="p-4">
+    <div class="flex justify-center mb-2">
+      <i class="fe fe-download text-gray-500 text-xl m-2"></i>
+    </div>
+    <div class="flex justify-center my-4">
+      <div class="rounded-full bg-gray-100 w-16 h-16 flex items-center justify-center">
+        <span class="fe fe-file text-gray-400 text-2xl"></span>
+      </div>
+    </div>
+    <div>
+      <span class="inline-block rounded-full bg-gray-100 text-gray-500 text-xs px-3 py-1">
+        {{ evidence.extFile }}
+      </span>
+    </div>
+  </div>
+  <div class="border-t border-transparent py-2">
+    <strong class="text-sm text-gray-800">{{ evidence.nombreFile }}</strong>
+  </div>
+</div>

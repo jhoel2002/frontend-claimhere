@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, InjectionToken } from '@angular/core';
 import { DataTableComponent } from '../../shared/components-admin/data-table/data-table.component';
 import { DataTableColumn } from '../../core/models/datatable-column.model';
 import { UserService } from '../../core/services-admin/user/user.service';
@@ -11,6 +11,8 @@ import { Page } from '../../core/models/pageable.model';
 import { ModalService } from '../../core/services-admin/modal/modal.service';
 import { ModalUserFormComponent } from './modal-user-form/modal-user-form.component';
 import { EntityFilterComponent } from '../../shared/components-admin/entity-filter/entity-filter.component';
+import { USER_SERVICE_TOKEN } from '../../core/models/token-injection.model';
+import { ModalEntityType } from '../../core/models/modal-entity-type';
 
 @Component({
   selector: 'app-user-admin',
@@ -22,7 +24,7 @@ import { EntityFilterComponent } from '../../shared/components-admin/entity-filt
 })
 export class UserAdminComponent {
 
-  // pageable: Page<User> = {
+  // pageable: Page<User> = {q
   //   content: [],
   //   totalPages: 0,
   //   totalElements: 0,
@@ -112,8 +114,11 @@ export class UserAdminComponent {
   //   this.pageable.number = 0;
   //   this.loadUsers();
   // }
-  private userService = inject(UserService);
-  private modalService = inject(ModalService);
+
+  entity: ModalEntityType = 'user';
+
+  userService = inject(USER_SERVICE_TOKEN);
+  modalService = inject(ModalService);
 
   columns: DataTableColumn[] = [
     { label: 'Nombre', dataKey: 'name' },
@@ -125,7 +130,7 @@ export class UserAdminComponent {
     { label: 'Fecha de Creación', dataKey: 'creation' }
   ];
 
-  loadUsers = (
+  loadCustomers = (
     search: string,
     start: string,
     end: string,
@@ -136,17 +141,17 @@ export class UserAdminComponent {
     const hasSearch = search.trim() !== '';
 
     if (hasDate && hasSearch) {
-      return this.userService.getUsersBySearchAndDateSimulation(search, start, end, page, size);
+      return this.userService.getUsersBySearchAndDate(search, start, end, page, size);
     } else if (hasDate) {
-      return this.userService.getUsersByDateRangeSimulation(start, end, page, size);
+      return this.userService.getUsersByDateRange(start, end, page, size);
     } else if (hasSearch) {
-      return this.userService.searchSimulation(search, page, size);
+      return this.userService.search(search, page, size);
     } else {
-      return this.userService.getAllUSimulation(page, size);
+      return this.userService.getAll(page, size);
     }
   };
 
   openModalRegister() {
-    this.modalService.openModalForCreation();
+    this.modalService.openModalForCreation(this.entity);
   }
 }

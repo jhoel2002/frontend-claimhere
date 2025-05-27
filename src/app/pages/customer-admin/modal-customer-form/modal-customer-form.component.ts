@@ -8,31 +8,34 @@ import { ModalService } from '../../../core/services-admin/modal/modal.service';
 import { Subscription } from 'rxjs';
 import { User } from '../../../core/models/user.model';
 import { IUserService } from '../../../core/services-admin/user/IUserService';
+import { ICustomerService } from '../../../core/services-admin/customer/ICustomerService';
+import { Customer } from '../../../core/models/customer.model';
+import { ModalEntityType } from '../../../core/models/modal-entity-type';
 
 @Component({
-  selector: 'app-modal-user-form',
+  selector: 'app-modal-customer-form',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf],
-  templateUrl: './modal-user-form.component.html',
-  styleUrls: ['./modal-user-form.component.css']
+  templateUrl: './modal-customer-form.component.html',
+  styleUrls: ['./modal-customer-form.component.css']
 })
-export class ModalUserFormComponent implements OnInit {
+export class ModalCustomerFormComponent implements OnInit {
 
   form!: FormGroup;
   @Output() valueForm = new EventEmitter();
 
-  @Input() userService!: IUserService;
+  @Input() customerService!: ICustomerService;
 
   isEditMode = false;
 
   private originalData: any;
+  private typeDocumentSelection: string = '';
 
-  // tipoDocumentoSeleccionado: string = '';
   // score: number = 0;
 
   private subscription = new Subscription();
 
-  modalPayload: { mode: 'create' | 'edit' | 'view', data: User | null } | null = null;
+  modalPayload: { mode: 'create' | 'edit' | 'view', data: Customer | null} | null = null;
 
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);
@@ -48,6 +51,11 @@ export class ModalUserFormComponent implements OnInit {
       }
     });
     this.subscription.add(sub);
+    const sub2 =  this.type_document?.valueChanges.subscribe((tipo) => {
+      this.typeDocumentSelection = tipo;
+      this.updateDocIdentidadValidation();
+    });
+    this.subscription.add(sub2);
   }
 
   ngOnDestroy(): void {
@@ -74,7 +82,6 @@ export class ModalUserFormComponent implements OnInit {
       }
       this.setValidatorsForPasswordFields(checked);
     });
-
     if (sub) this.subscription.add(sub);
   }
 
@@ -85,7 +92,6 @@ export class ModalUserFormComponent implements OnInit {
       address: data.address,
       phone: data.phone,
       email: data.email,
-      role: data.role
     });
   }
 
@@ -116,7 +122,6 @@ export class ModalUserFormComponent implements OnInit {
     this.setValidatorsForPasswordFields(false);
     this.resetFormState();
     this.modalService.closeModal();
-    //this.modalPayload = null;
   }
 
   isOpen(): boolean {
@@ -129,14 +134,14 @@ export class ModalUserFormComponent implements OnInit {
       lastname: ['', Validators.required],
       address: ['', Validators.required],
       phone: ['', Validators.required],
-      // tipoDocIdentidad: ['', [Validators.required]],
-      // docIdentidad: [
-      //   '',
-      //   [
-      //     Validators.required,
-      //     CustomValidations.invalidDocument(this.tipoDocumentoSeleccionado),
-      //   ],
-      // ],
+      type_document: ['', [Validators.required]],
+      document: [
+        '',
+        [
+          Validators.required,
+          CustomValidations.invalidDocument(this.typeDocumentSelection),
+        ],
+      ],
       email: ['', [Validators.required, Validators.email]],
       password: ['', 
         [
@@ -145,14 +150,8 @@ export class ModalUserFormComponent implements OnInit {
         ]
       ],
       confirmationPassword: ['',[]],
-      role: ['', Validators.required],
       showChangePassword: [false]
     });
-
-    // this.tipoDocIdentidad?.valueChanges.subscribe((tipo) => {
-    //   this.tipoDocumentoSeleccionado = tipo;
-    //   this.updateDocIdentidadValidation();
-    // });
   }
 
   // onStrengthChange(score: number){
@@ -172,21 +171,21 @@ export class ModalUserFormComponent implements OnInit {
     return password === confirmPassword ? null : { 'passwordMismatch': true };
   }
 
-  // updateDocIdentidadValidation() {
-  //   if (this.docIdentidad) {
-  //     this.docIdentidad.setValidators([
-  //       Validators.required,
-  //       CustomValidations.invalidDocument(this.tipoDocumentoSeleccionado),
-  //     ]);
-  //     this.docIdentidad.updateValueAndValidity();
-  //   }
-  // }
+  updateDocIdentidadValidation() {
+    if (this.document) {
+      this.document.setValidators([
+        Validators.required,
+        CustomValidations.invalidDocument(this.typeDocumentSelection),
+      ]);
+      this.document.updateValueAndValidity();
+    }
+  }
 
   private isFormChanged(): boolean {
     const v = this.form.getRawValue();
     const o = this.originalData;
 
-    return ['name', 'lastname', 'address', 'phone', 'email', 'role'].some(f => v[f] !== o[f])
+    return ['name', 'last_name', 'address', 'phone', 'email', 'type_document', 'document'].some(f => v[f] !== o[f])
       || (v.showChangePassword && (v.password.trim() !== '' || v.confirmationPassword.trim() !== ''));
   }
  
@@ -204,14 +203,14 @@ export class ModalUserFormComponent implements OnInit {
     const formData = this.form.getRawValue();
 
     const request$ = this.modalPayload?.mode === 'edit' && this.modalPayload.data
-      ? this.userService.update(this.modalPayload.data.id, formData)
-      : this.userService.register(formData);
+      ? this.customerService.update(this.modalPayload.data.id, formData)
+      : this.customerService.register(formData);
 
     request$.subscribe({
       next: () => {
         const successMessage = this.isEditMode
-          ? 'Usuario actualizado correctamente.'
-          : 'Usuario registrado correctamente.';
+          ? 'Cliente actualizado correctamente.'
+          : 'Cliente registrado correctamente.';
 
         this.alertService.success({ message: successMessage }).then(() => {
           this.valueForm.emit();
@@ -248,13 +247,13 @@ export class ModalUserFormComponent implements OnInit {
     return this.form.get('phone');
   }
 
-  // get tipoDocIdentidad() {
-  //   return this.form.get('tipoDocIdentidad');
-  // }
+  get type_document() {
+    return this.form.get('type_document');
+  }
 
-  // get docIdentidad() {
-  //   return this.form.get('docIdentidad');
-  // }
+  get document() {
+    return this.form.get('document');
+  }
 
   get password(){
     return this.form.get('password');
@@ -262,10 +261,6 @@ export class ModalUserFormComponent implements OnInit {
 
   get confirmationPassword(){
     return this.form.get('confirmationPassword');
-  }
-
-  get role() {
-    return this.form.get('role');
   }
 
 }
