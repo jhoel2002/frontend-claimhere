@@ -43,11 +43,10 @@ export class LoginComponent {
     }
 
     const credentials: AuthData = this.loginForm.value as AuthData;
-
     this.authService.login(credentials).subscribe({
-      next: (response) => {
-        const buffet = response.buffet;
-        this.router.navigate([`/${buffet}/user`]);
+      next: () => {
+        const buffet = this.authService.userBuffet;
+        this.router.navigate([`/${buffet}/request/pending`]);
       },
       error: (error) => {
         this.errorMessage = error;
