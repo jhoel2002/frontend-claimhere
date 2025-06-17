@@ -1,0 +1,109 @@
+<div *ngIf="isOpen()" class="fixed inset-0 z-50 flex items-center justify-center">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="close()"></div>
+  
+  <!-- Modal -->
+  <div class="relative bg-white rounded-lg shadow-xl w-full max-w-4xl m-4 animate-modal-up p-8 space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-gray-900">
+        {{ modalPayload?.mode === 'create' ? 'Crear nuevo caso' : 'Crear nuevo caso' }}
+      </h3>
+      <button (click)="close()" class="text-gray-500 hover:text-gray-700 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  
+    <!-- Content -->
+    <form [formGroup]="form" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Columna izquierda -->
+        <div class="space-y-4">
+          <!-- Title -->
+          <div class="form-group">
+            <label for="title-case" class="text-sm font-medium text-gray-700">Título:</label>
+            <input type="text" id="title-case" formControlName="title" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="title?.invalid && title?.touched" class="text-red-600 text-xs">
+              <div *ngIf="title?.errors?.['required']">El título es requerido.</div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description-case" class="text-sm font-medium text-gray-700">Descripción:</label>
+            <textarea id="description-case" formControlName="description" rows="4" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+            <div *ngIf="description?.invalid && description?.touched" class="text-red-600 text-xs">
+              <div *ngIf="description?.errors?.['required']">La descripción es requerida.</div>
+            </div>
+          </div>
+
+          <!-- Tipo de Caso -->
+          <div class="form-group mt-4">
+            <label for="type_case" class="text-sm font-medium text-gray-700">Tipo de caso:</label>
+            <select id="type_case" formControlName="type_case" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Seleccione un tipo</option>
+              <option *ngFor="let type of caseTypes" [value]="type">{{ type }}</option>
+            </select>
+            <div *ngIf="type_case?.invalid && type_case?.touched" class="text-red-600 text-xs">
+              <div *ngIf="type_case?.errors?.['required']">El tipo de caso es requerido.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna derecha -->
+        <div class="space-y-4">
+          <!-- Asignación de abogado -->
+          <div class="form-group">
+            <label for="description-case" class="text-sm font-medium text-gray-700">Buscar Abogado:</label>
+            <div class="mb-4">
+              <app-dropdown-customer
+                    [control]="lawyer"
+                    [label]="'Abogado'"
+                    [valueService]="lawyerService"
+                    [searchMethod]="'searchLawyers'"
+                    [typeCase]="type_case!.value"
+                    [errorMsg]="lawyer.invalid && lawyer.touched ? (lawyer.errors?.['required'] ? 'El abogado es requerido.' : null) : null"
+                    >
+              </app-dropdown-customer>
+            </div>
+          </div>
+
+          <!-- Cliente -->
+          <div class="form-group">
+            <label for="customer-case" class="text-sm font-medium text-gray-700">Buscar Cliente:</label>
+              <app-dropdown-customer
+                [control]="customer"
+                [label]="'Cliente'"
+                [valueService]="customerService"
+                [searchMethod]="'searchCustomers'"
+                [errorMsg]="customer.invalid && customer.touched ? (customer.errors?.['required'] ? 'El cliente es requerido.' : null) : null"
+                >
+            </app-dropdown-customer>
+          </div>
+
+          <!-- Evidencia -->
+          <div class="form-group">
+            <label class="text-sm font-medium text-gray-800">Evidencias:</label>
+            <input type="file" (change)="onEvidencesSelected($event)" multiple class="mt-1 block w-full p-2 text-sm text-gray-600">
+            <div *ngIf="uploadError" class="text-red-600 text-xs">{{ uploadError }}</div>
+          </div>
+
+          <!-- Cotización -->
+          <div class="form-group">
+            <label class="text-sm font-medium text-gray-800">Cotización:</label>
+            <input type="file" (change)="onCotizationSelected($event)" class="mt-1 block w-full p-2 text-sm text-gray-600">
+            <div *ngIf="uploadError" class="text-red-600 text-xs">{{ uploadError }}</div>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2">
+      <button type="button" (click)="close()" class="px-4 py-2 text-sm text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-200 rounded-md font-medium">Cancelar</button>
+      <button type="button" (click)="onSubmit()" class="px-4 py-2 text-sm text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 rounded-md font-medium">Guardar</button>
+    </div>
+  </div>
+</div>

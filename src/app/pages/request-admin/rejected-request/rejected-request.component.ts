@@ -19,38 +19,39 @@ import { ModalRequestViewComponent } from '../modal-request-view/modal-request-v
 })
 export class RejectedRequestComponent {
 
-    entity: ModalEntityType = 'case-request';
-  
-    modalService = inject(ModalService);
-    requestService = inject(REQUEST_SERVICE_TOKEN);
-    isRequest:boolean = true;
-  
-    columns: DataTableColumn[] = [
-      { label: 'Título del Caso', dataKey: 'title' },
-      { label: 'Descripcion', dataKey: 'description' },
-      { label: 'Tipo de Caso', dataKey: 'type_case' },
-      { label: 'Cliente', dataKey: 'customer' },
-      { label: 'Fecha de Creacion', dataKey: 'application_date' }
-    ];
-  
-    loadUsers = (
-      search: string,
-      start: string,
-      end: string,
-      page: number,
-      size: number
-    ): Observable<Page<CaseRequest>> => {
-      const hasDate = start !== '' && end !== '';
-      const hasSearch = search.trim() !== '';
-  
-      if (hasDate && hasSearch) {
-        return this.requestService.getRequestsBySearchAndDate(search, start, end, page, size, "REJECTED");
-      } else if (hasDate) {
-        return this.requestService.getRequestsByDateRange(start, end, page, size, "REJECTED");
-      } else if (hasSearch) {
-        return this.requestService.getRequestsBySearch(search, page, size, "REJECTED");
-      } else {
-        return this.requestService.getRequestsByStatus(page, size, "REJECTED");
-      }
-    };
+  entity: ModalEntityType = 'request-rejected';
+
+  modalService = inject(ModalService);
+  requestService = inject(REQUEST_SERVICE_TOKEN);
+  isRequestRejected:boolean = true;
+
+  columns: DataTableColumn[] = [
+    { label: 'Codigo', dataKey: 'code' },
+    { label: 'Título del Caso', dataKey: 'title' },
+    { label: 'Descripcion', dataKey: 'description' },
+    { label: 'Tipo de Caso', dataKey: 'type_case' },
+    { label: 'Cliente', dataKey: 'customer' },
+    { label: 'Fecha de Creacion', dataKey: 'creation' }
+  ];
+
+  loadUsers = (
+    search: string,
+    start: string,
+    end: string,
+    page: number,
+    size: number
+  ): Observable<Page<CaseRequest>> => {
+    const hasDate = start !== '' && end !== '';
+    const hasSearch = search.trim() !== '';
+
+    if (hasDate && hasSearch) {
+      return this.requestService.getRequestsBySearchAndDate(search, start, end, page, size, "REJECTED");
+    } else if (hasDate) {
+      return this.requestService.getRequestsByDateRange(start, end, page, size, "REJECTED");
+    } else if (hasSearch) {
+      return this.requestService.getRequestsBySearch(search, page, size, "REJECTED");
+    } else {
+      return this.requestService.getRequestsByStatus(page, size, "REJECTED");
+    }
+  };
 }

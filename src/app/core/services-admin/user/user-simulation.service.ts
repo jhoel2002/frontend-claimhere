@@ -9,20 +9,22 @@ import { User } from '../../models/user.model';
 })
 export class UserSimulationService implements IUserService {
 
-  private users = Array.from({ length: 100 }).map((_, i) => ({
+  private users:User[] = Array.from({ length: 100 }).map((_, i) => ({
     id: i + 1,
+    code: `USR${i + 1}`,
     name: ['Ana', 'Carlos', 'María', 'Juan', 'Pedro', 'Luis', 'Sofía', 'Camila', 'José', 'Valeria'][i % 10] + ` ${['Andrés', 'Belén', 'César', 'Diana', 'Eduardo', 'Fabiola', 'Gustavo', 'Helena', 'Iván', 'Julia'][Math.floor(Math.random() * 10)]}`,
-    lastname: ['García', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Fernández', 'Ruiz', 'Díaz'][Math.floor(Math.random() * 10)],
+    last_name: ['García', 'Martínez', 'López', 'Sánchez', 'Pérez', 'González', 'Rodríguez', 'Fernández', 'Ruiz', 'Díaz'][Math.floor(Math.random() * 10)],
     email: `user${i + 1}${['@gmail.com','@hotmail.com','@yahoo.com','@example.com'][Math.floor(Math.random() * 4)]}`,
     phone: `9${Math.floor(10000000 + Math.random() * 90000000)}`,
     role: ['Admin', 'User', 'Manager', 'Supervisor', 'Guest'][i % 5],
     address: `${['Av.', 'Jr.', 'Calle', 'Psje.'][Math.floor(Math.random() * 4)]} ${['Primavera', 'Las Flores', 'El Sol', 'La Luna', 'Libertad', 'La Paz'][Math.floor(Math.random() * 6)]} ${Math.floor(Math.random() * 500) + 1}`,
+    enabled: Math.random() > 0.2, // 80% chance to be enabled
     creation: (() => {
       const date = new Date(+(new Date()) - Math.floor(Math.random() * 10000000000));
       const day = ('0' + date.getDate()).slice(-2);
       const month = ('0' + (date.getMonth() + 1)).slice(-2);
       const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
+      return `${day}-${month}-${year}`;
     })()
   }));
 
@@ -49,7 +51,7 @@ export class UserSimulationService implements IUserService {
   search(searchText: string, page: number, size: number): Observable<Page<User>> {
     const filtered = this.users.filter(u =>
       u.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      u.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
+      u.last_name.toLowerCase().includes(searchText.toLowerCase()) ||
       u.email.toLowerCase().includes(searchText.toLowerCase())
     );
     const start = page * size;
@@ -64,31 +66,20 @@ export class UserSimulationService implements IUserService {
     });
   }
 
-  private convertToISO(dateInput: string | Date): string {
-    if (dateInput instanceof Date) {
-      return dateInput.toISOString();
-    }
-
-    if (typeof dateInput === 'string') {
-      const parts = dateInput.split('/');
-      if (parts.length === 3) {
-        const [day, month, year] = parts;
-        return `${year}-${month.padStart(2,'0')}-${day.padStart(2,'0')}`;
-      }
-      return dateInput;
-    }
-    throw new Error('Invalid date input');
+  private parseDate(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
   }
 
   getUsersByDateRange(start: string, end: string, page: number, size: number): Observable<Page<User>> {
-    const startISO = this.convertToISO(start);
-    const endISO = this.convertToISO(end);
+    const startISO = this.parseDate(start);
+    const endISO = this.parseDate(end);
 
     const startDate = new Date(startISO);
     const endDate = new Date(endISO);
 
     const filtered = this.users.filter(user => {
-      const userDateISO = this.convertToISO(user.creation);
+      const userDateISO = this.parseDate(user.creation);
       const creationDate = new Date(userDateISO);
       return creationDate >= startDate && creationDate <= endDate;
     });
@@ -108,19 +99,19 @@ export class UserSimulationService implements IUserService {
   }
 
   getUsersBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number): Observable<Page<User>> {
-    const startISO = this.convertToISO(start);
-    const endISO = this.convertToISO(end);
+    const startISO = this.parseDate(start);
+    const endISO = this.parseDate(end);
 
     const startDate = new Date(startISO);
     const endDate = new Date(endISO);
 
     const filtered = this.users.filter(user => {
-      const userDateISO = this.convertToISO(user.creation);
+      const userDateISO = this.parseDate(user.creation);
       const creationDate = new Date(userDateISO);
 
       const matchesText = !searchText || (
         user.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        user.lastname.toLowerCase().includes(searchText.toLowerCase()) ||
+        user.last_name.toLowerCase().includes(searchText.toLowerCase()) ||
         user.email.toLowerCase().includes(searchText.toLowerCase())
       );
       const matchesDate = creationDate >= startDate && creationDate <= endDate;
@@ -150,6 +141,16 @@ export class UserSimulationService implements IUserService {
         this.users.unshift(newUser);
         return of({ message: 'Usuario registrado correctamente' }).pipe(delay(500));
   }
+
+  disabled(code: string, enabled: boolean): Observable<any> {
+    const user = this.users.find(u => u.code === code);
+    if (user) {
+      user.enabled = !enabled;
+      return of({ message: 'Usuario deshabilitado correctamente' }).pipe(delay(500));
+    } else {
+      return throwError(() => new Error('Usuario no encontrado'));
+    }
+  }
   
   update(userId: number, userData: User): Observable<any> {
     const index = this.users.findIndex(u => u.id === userId);
@@ -162,5 +163,15 @@ export class UserSimulationService implements IUserService {
     } else {
       return throwError(() => new Error('Usuario no encontrado'));
     }
+  }
+
+  delete(code: string): Observable<any>{
+    const index = this.users.findIndex(u => u.code === code);
+    if (index === -1) {
+      return throwError(() => new Error('Usuario no encontrado'));
+    }
+
+    this.users.splice(index, 1);
+    return of({ message: 'Usuario eliminado correctamente' }).pipe(delay(500));
   }
 }

@@ -1,9 +1,14 @@
-<div *ngIf="isOpen()" class="fixed inset-0 z-50 flex items-center justify-center">
+<div *ngIf="isOpen()" class="fixed inset-0 z-50 flex justify-center overflow-y-auto">
+
   <!-- Backdrop -->
   <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="close()"></div>
   
   <!-- Modal -->
-  <div class="relative bg-white rounded-lg shadow-xl w-full max-w-4xl m-4 animate-modal-up p-8 space-y-6">
+  <div class="relative my-auto 
+              w-full max-w-4xl
+              bg-white rounded-lg shadow-xl
+              animate-modal-up p-8 space-y-6 m-4
+              max-h-[calc(100vh-2rem)] overflow-y-auto">
     <!-- Header -->
     <div class="flex items-center justify-between">
       <h3 class="text-xl font-semibold text-gray-900">
@@ -11,8 +16,7 @@
       </h3>
       <button 
         (click)="close()"
-        class="text-gray-500 hover:text-gray-700  transition-colors"
-      >
+        class="text-gray-500 hover:text-gray-700  transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
@@ -36,9 +40,47 @@
           <!-- Apellidos -->
           <div class="form-group">
             <label for="lastname-customer" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
-            <input type="text" id="lastname-customer" formControlName="lastname" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <div *ngIf="lastname?.invalid && lastname?.touched" class="text-red-600 text-xs">
-              <div *ngIf="lastname?.errors?.['required']">Los apellidos son requeridos.</div>
+            <input type="text" id="lastname-customer" formControlName="last_name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="last_name?.invalid && last_name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="last_name?.errors?.['required']">Los apellidos son requeridos.</div>
+            </div>
+          </div>
+
+          <!-- Tipo de Documento -->
+          <div class="form-group">
+            <label for="document-type-customer" class="text-sm font-medium text-gray-700 ">Tipo de documento:</label>
+            <select id="document-type-customer" formControlName="document_type" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option disabled selected hidden value="">Seleccione un tipo de documento</option>
+              <option value="DNI">DNI</option>
+              <option value="PASAPORTE">PASAPORTE</option>
+              <option value="CE">CARNET EXT.</option>
+            </select>
+            <div *ngIf="document_type?.invalid && document_type?.touched" class="text-red-600 text-xs">
+              <div *ngIf="document_type?.errors?.['required']">El tipo de documento es requerido.</div>
+            </div>
+          </div>
+
+          <!-- Documento -->
+          <div class="form-group">
+            <label for="document_number-customer" class="text-sm font-medium text-gray-700 ">Documento:</label>
+            <input type="text" id="document_number-customer" formControlName="document_number" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="document_number?.invalid && document_number?.touched" class="text-red-600 text-xs">
+              <div *ngIf="document_number?.errors?.['required']">El documento es requerido.</div>
+              <div *ngIf="document_number?.errors?.['invalidNumberDNI']">El DNI debe tener solo números.</div>
+              <div *ngIf="document_number?.errors?.['invalidDigitosDNI']">El DNI debe tener 8 dígitos.</div>
+              <div *ngIf="document_number?.errors?.['invalidPassportOrCarnet']">El documento debe tener como máximo 20 caracteres.</div>
+            </div>
+          </div>
+        </div> 
+
+        <!-- Columna derecha -->
+        <div class="space-y-4">
+          <!-- telefono -->
+          <div class="form-group">
+            <label for="phone-customer" class="text-sm font-medium text-gray-700 ">Telefono:</label>
+            <input type="text" id="phone-customer" formControlName="phone" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="phone?.invalid && phone?.touched" class="text-red-600 text-xs">
+              <div *ngIf="phone?.errors?.['required']">El telefono es requerido.</div>
             </div>
           </div>
 
@@ -51,44 +93,6 @@
             </div>
           </div>
 
-          <!-- telefono -->
-          <div class="form-group">
-            <label for="phone-customer" class="text-sm font-medium text-gray-700 ">Telefono:</label>
-            <input type="text" id="phone-customer" formControlName="phone" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <div *ngIf="phone?.invalid && phone?.touched" class="text-red-600 text-xs">
-              <div *ngIf="phone?.errors?.['required']">El telefono es requerido.</div>
-            </div>
-          </div>
-
-          <!-- Tipo de Documento -->
-          <div class="form-group">
-            <label for="type_document-customer" class="text-sm font-medium text-gray-700 ">Tipo de documento:</label>
-            <select id="type_document-customer" formControlName="type_document" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option selected value="">Seleccione un tipo de documento</option>
-              <option value="DNI">DNI</option>
-              <option value="PASAPORTE">PASAPORTE</option>
-              <option value="CE">CARNET EXT.</option>
-            </select>
-            <div *ngIf="type_document?.invalid && type_document?.touched" class="text-red-600 text-xs">
-              <div *ngIf="type_document?.errors?.['required']">El tipo de documento es requerido.</div>
-            </div>
-          </div>
-
-          <!-- Documento -->
-          <div class="form-group">
-            <label for="document-customer" class="text-sm font-medium text-gray-700 ">Documento:</label>
-            <input type="text" id="document-customer" formControlName="document" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <div *ngIf="document?.invalid && document?.touched" class="text-red-600 text-xs">
-              <div *ngIf="document?.errors?.['required']">El documento es requerido.</div>
-              <div *ngIf="document?.errors?.['invalidNumberDNI']">El DNI debe tener solo números.</div>
-              <div *ngIf="document?.errors?.['invalidDigitosDNI']">El DNI debe tener 8 dígitos.</div>
-              <div *ngIf="document?.errors?.['invalidPassportOrCarnet']">El documento debe tener como máximo 20 caracteres.</div>
-            </div>
-          </div>
-        </div> 
-
-        <!-- Columna derecha -->
-        <div class="space-y-4">
           <!-- Correo -->
           <div class="form-group">
             <label for="email-customer" class="text-sm font-medium text-gray-700 ">Correo:</label>

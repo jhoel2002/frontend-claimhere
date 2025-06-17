@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <h3 class="text-xl font-semibold text-gray-900">
-        {{ modalPayload?.mode === 'edit' ? 'Editar' : 'Crear nuevo' }} usuario
+        {{ modalPayload?.mode === 'edit' ? 'Editar' : 'Crear nuevo' }} empleado
       </h3>
       <button 
         (click)="close()"
@@ -35,10 +35,10 @@
 
           <!-- Apellidos -->
           <div class="form-group">
-            <label for="lastname-user" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
-            <input type="text" id="lastname-user" formControlName="lastname" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <div *ngIf="lastname?.invalid && lastname?.touched" class="text-red-600 text-xs">
-              <div *ngIf="lastname?.errors?.['required']">Los apellidos son requeridos.</div>
+            <label for="last-name-user" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
+            <input type="text" id="last-name-user" formControlName="last_name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="last_name?.invalid && last_name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="last_name?.errors?.['required']">Los apellidos son requeridos.</div>
             </div>
           </div>
 
@@ -94,8 +94,9 @@
             <label for="role-user" class="text-sm font-medium text-gray-700 ">Rol del usuario:</label>
             <select id="role-user" formControlName="role" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option selected value="">Seleccione un rol</option>
-              <option value="Admin">Administrador</option>
-              <option value="Empleado">Empleado</option>
+              <option value="ROLE_COORDINATOR">Coordinador</option>
+              <option value="ROLE_LEGAL_ASSISTANT">Asistente</option>
+              <option value="ROLE_OTHERS">Otros</option>
             </select>
             <div *ngIf="role?.invalid && role?.touched" class="text-red-600 text-xs">
               <div *ngIf="role?.errors?.['required']">El rol es requerido.</div>

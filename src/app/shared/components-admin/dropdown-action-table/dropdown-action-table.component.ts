@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ModalEntityType } from '../../../core/models/modal-entity-type';
 
 @Component({
   selector: 'app-dropdown-action-table',
@@ -10,14 +11,14 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Outpu
 })
 export class DropdownActionTableComponent {
 
-  @Input() isRequest: boolean = false;
-  @Input() estadoAceptado: boolean = false;
-  @Input() isEmpleados: boolean = false;
-  @Input() row: any;
+  @Input() entity!: ModalEntityType;
+  @Input() row!: any;
+  @Input() isEnabled!: boolean;
 
   @Output() viewRequest = new EventEmitter<any>();
   @Output() editItem = new EventEmitter<any>();
   @Output() deleteItem = new EventEmitter<any>();
+  @Output() disableItem = new EventEmitter<any>();
 
   dropdownOpen: boolean = false;
 
@@ -46,6 +47,11 @@ export class DropdownActionTableComponent {
 
   onDeleteItem() {
     this.deleteItem.emit();
+    this.dropdownOpen = false;
+  }
+
+  onDisableItem() {
+    this.disableItem.emit();
     this.dropdownOpen = false;
   }
 }

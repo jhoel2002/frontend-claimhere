@@ -9,4 +9,6 @@ export interface IUserService {
   getUsersBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number): Observable<Page<User>>;
   register(userData: User): Observable<any>;
   update(userId: number, userData: User): Observable<any>;
+  disabled(code: string, enabled: boolean): Observable<any>;
+  delete(code: string): Observable<any>;
 }

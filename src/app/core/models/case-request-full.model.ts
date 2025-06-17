@@ -1,25 +1,22 @@
 
 export interface CaseRequestFull {
-  id: string;
-  caseId: string;
+  id: number;
+  code: string;
   title: string;
   type_case: string;
   status_request: string;
-  applicationDate: string; // Puede ser Date según tu backend
+  creation: string;
   description: string;
-  customer: Customer;
-  evidence?: string[]; // URLs de imágenes
-  downloadableEvidence?: DownloadableEvidence[];
+  customerName: string;
+  customerEmail: string;
+  customerDocumentType: string;
+  customerDocumentNumber: string;
+  lawyerName: string
+  cotizacion?: Document;
+  evidencias?: Document[];
 }
 
-export interface Customer {
+export interface Document {
+  code: string;
   name: string;
-  email: string;
-  documentType: string;
-  documentNumber: string;
-}
-
-export interface DownloadableEvidence {
-  fileName: string;
-  fileUrl: string;
 }

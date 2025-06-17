@@ -19,21 +19,15 @@ export class DataTableComponent {
   caseService = inject(RequestService);
   modalService = inject(ModalService);
 
-  @Input() isRequest = false;
   @Input() columns: DataTableColumn[] = [];
   @Input() data: any[] = [];
   @Input() entity!: ModalEntityType;
-
-  @Input() estadoPendiente: boolean = false;
-  @Input() estadoAceptado: boolean = false;
-  @Input() isEmpleados: boolean = false;
-
-  @Output() dataUpdated = new EventEmitter<any>();
-
+  
   @Output() itemDelete = new EventEmitter<any>();
+  @Output() itemDisable = new EventEmitter<any>();
 
   viewRequest(item: any) {
-    this.modalService.openModalWithData(item, this.entity);
+    this.modalService.openModalView(item, this.entity);
   }
 
   editItem(item: any) {
@@ -42,5 +36,9 @@ export class DataTableComponent {
 
   deleteItem(item: any){
     this.itemDelete.emit(item);
+  }
+
+  disableItem(item: any){;
+    this.itemDisable.emit(item);
   }
 }

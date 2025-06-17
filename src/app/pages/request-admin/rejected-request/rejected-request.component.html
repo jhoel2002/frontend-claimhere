@@ -3,8 +3,7 @@
   [columns]="columns"
   [fetchFunction]="loadUsers"
   [entity]="entity"
-  [isRequest]="isRequest"
   #updateTable>
 </app-entity-filter>
 
-<app-modal-request-view [requestService]="requestService"></app-modal-request-view>
+<app-modal-request-view [entity]="entity" (dataUpdated)="updateTable.onReload()" [requestService]="requestService"></app-modal-request-view>

@@ -51,7 +51,7 @@ export class ModalCustomerFormComponent implements OnInit {
       }
     });
     this.subscription.add(sub);
-    const sub2 =  this.type_document?.valueChanges.subscribe((tipo) => {
+    const sub2 =  this.document_type?.valueChanges.subscribe((tipo) => {
       this.typeDocumentSelection = tipo;
       this.updateDocIdentidadValidation();
     });
@@ -85,13 +85,21 @@ export class ModalCustomerFormComponent implements OnInit {
     if (sub) this.subscription.add(sub);
   }
 
-  fillForm(data: Partial<User>) {
+  fillForm(data: Partial<Customer>) {
+
+    const full = (data.fullName ?? '').trim();
+    const parts = full.split(/\s+/);
+    const name = parts.shift() ?? '';
+    const last_name = parts.join(' ');
+
     this.form.patchValue({
-      name: data.name,
-      lastname: data.lastname,
+      name: name,
+      last_name: last_name,
       address: data.address,
       phone: data.phone,
       email: data.email,
+      document_type: data.document_type,
+      document_number: data.document_number
     });
   }
 
@@ -131,11 +139,11 @@ export class ModalCustomerFormComponent implements OnInit {
   private createForm() {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      lastname: ['', Validators.required],
+      last_name: ['', Validators.required],
       address: ['', Validators.required],
       phone: ['', Validators.required],
-      type_document: ['', [Validators.required]],
-      document: [
+      document_type: ['', [Validators.required]],
+      document_number: [
         '',
         [
           Validators.required,
@@ -172,12 +180,12 @@ export class ModalCustomerFormComponent implements OnInit {
   }
 
   updateDocIdentidadValidation() {
-    if (this.document) {
-      this.document.setValidators([
+    if (this.document_number) {
+      this.document_number.setValidators([
         Validators.required,
         CustomValidations.invalidDocument(this.typeDocumentSelection),
       ]);
-      this.document.updateValueAndValidity();
+      this.document_number.updateValueAndValidity();
     }
   }
 
@@ -185,7 +193,7 @@ export class ModalCustomerFormComponent implements OnInit {
     const v = this.form.getRawValue();
     const o = this.originalData;
 
-    return ['name', 'last_name', 'address', 'phone', 'email', 'type_document', 'document'].some(f => v[f] !== o[f])
+    return ['name', 'last_name', 'address', 'phone', 'email', 'document_type', 'document_number'].some(f => v[f] !== o[f])
       || (v.showChangePassword && (v.password.trim() !== '' || v.confirmationPassword.trim() !== ''));
   }
  
@@ -203,7 +211,7 @@ export class ModalCustomerFormComponent implements OnInit {
     const formData = this.form.getRawValue();
 
     const request$ = this.modalPayload?.mode === 'edit' && this.modalPayload.data
-      ? this.customerService.update(this.modalPayload.data.id, formData)
+      ? this.customerService.update(this.modalPayload.data.code!, formData)
       : this.customerService.register(formData);
 
     request$.subscribe({
@@ -231,28 +239,28 @@ export class ModalCustomerFormComponent implements OnInit {
     return this.form.get('name');
   }
 
-  get lastname() {
-    return this.form.get('lastname');
+  get last_name() {
+    return this.form.get('last_name');
+  }
+
+  get document_type() {
+    return this.form.get('document_type');
+  }
+
+  get document_number() {
+    return this.form.get('document_number');
   }
 
   get email() {
     return this.form.get('email');
   }
 
-  get address() {
-    return this.form.get('address');
-  }
-
   get phone() {
     return this.form.get('phone');
   }
 
-  get type_document() {
-    return this.form.get('type_document');
-  }
-
-  get document() {
-    return this.form.get('document');
+  get address() {
+    return this.form.get('address');
   }
 
   get password(){

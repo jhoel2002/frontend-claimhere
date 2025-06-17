@@ -10,11 +10,19 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { environment } from '../environments/environment';
 import { UserSimulationService } from './core/services-admin/user/user-simulation.service';
 import { UserService } from './core/services-admin/user/user.service';
-import { CUSTOMER_SERVICE_TOKEN, REQUEST_SERVICE_TOKEN, USER_SERVICE_TOKEN } from './core/models/token-injection.model';
+import { AUTH_SERVICE_TOKEN, BUFFET_SERVICE_TOKEN, CUSTOMER_SERVICE_TOKEN, DOCUMENT_SERVICE_TOKEN, LAWYER_SERVICE_TOKEN, REQUEST_SERVICE_TOKEN, USER_SERVICE_TOKEN } from './core/models/token-injection.model';
 import { CustomerService } from './core/services-admin/customer/customer.service';
 import { CustomerSimulationService } from './core/services-admin/customer/customer-simulation.service';
 import { RequestSimulationService } from './core/services-admin/request/request-simulation.service';
 import { RequestService } from './core/services-admin/request/request.service';
+import { LawyerService } from './core/services-admin/lawyer/lawyer.service';
+import { LawyerSimulationService } from './core/services-admin/lawyer/lawyer-simulation.service';
+import { DocumentSimulationService } from './core/services-admin/document/document-simulation.service';
+import { DocumentService } from './core/services-admin/document/document.service';
+import { AuthSimulationService } from './core/services-admin/auth/auth-simulation.service';
+import { AuthService } from './core/services-admin/auth/auth.service';
+import { BuffetSimulationService } from './core/services-admin/buffet/buffet-simulation.service';
+import { BuffetService } from './core/services-admin/buffet/buffet.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +31,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideHttpClient(withInterceptors([loadingInterceptor])),
     importProvidersFrom(BrowserAnimationsModule), provideAnimationsAsync(),
+    {
+      provide: AUTH_SERVICE_TOKEN,
+      useClass: environment.useMock ? AuthSimulationService : AuthService
+    },
     {
       provide: USER_SERVICE_TOKEN,
       useClass: environment.useMock ? UserSimulationService : UserService
@@ -34,6 +46,18 @@ export const appConfig: ApplicationConfig = {
     {
       provide: REQUEST_SERVICE_TOKEN,
       useClass: environment.useMock ? RequestSimulationService : RequestService
+    },
+    {
+      provide: LAWYER_SERVICE_TOKEN,
+      useClass: environment.useMock ? LawyerSimulationService : LawyerService
+    },
+    {
+      provide: DOCUMENT_SERVICE_TOKEN,
+      useClass: environment.useMock ? DocumentSimulationService : DocumentService
+    },
+    {
+      provide: BUFFET_SERVICE_TOKEN,
+      useClass: environment.useMock ? BuffetSimulationService : BuffetService
     },
   ]
 };

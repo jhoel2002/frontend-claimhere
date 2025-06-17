@@ -1,8 +1,10 @@
 export const nameEndpints = {
-    requestEndpoint: 'api/requests',
+    requestEndpoint: 'api/casesRequest',
     companyEndpoint: 'api/companies',
     customerEndpoint: 'api/customer',
     authEndpoint: 'auth',
     evidenceEndpoint: 'api/evidences',
-    usuarioEndpoint: 'api/users'
+    usuarioEndpoint: 'api/users',
+    lawyerEndpoint: 'api/lawyer',
+    buffetEndpoint: 'api/buffet'
 };

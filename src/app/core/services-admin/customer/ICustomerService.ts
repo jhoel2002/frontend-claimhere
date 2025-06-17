@@ -8,5 +8,6 @@ export interface ICustomerService {
     getCustomersByDateRange(start: string, end: string, page: number, size: number): Observable<Page<Customer>>;
     getCustomersBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number): Observable<Page<Customer>>;
     register(userData: Customer): Observable<any>;
-    update(userId: number, userData: Customer): Observable<any>;
+    update(customerCode: string, customerData: Customer): Observable<any>
+    searchCustomers(query: string): Observable<any[]>;
 }

@@ -1,12 +1,16 @@
 export interface Customer {
-  id: number;
+  id?: number;
+  code?: string;
+  fullName?: string;
   name: string;
   last_name: string;
+  document_type: string;
+  document_number: string;
   email: string;
-  password?: string;
   phone: string;
+  password?: string;
   address: string;
-  creation: string;
-  type_document: string;
-  document: string;
+  enabled?: boolean;
+  creation?: string;
+  buffet?: string;
 }

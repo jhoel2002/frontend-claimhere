@@ -1,42 +1,12 @@
 <app-entity-filter
-  [title]="'Usuarios'"
+  [title]="'Empleados'"
   [columns]="columns"
   [fetchFunction]="loadCustomers"
   (onRegister)="openModalRegister()"
   [entity]="entity"
-  #updateTable>
+  (onDelete)="modal.deleteItem($event)"
+  (onDisable)="modal.disableItem($event)"
+  #entityFilter>
 </app-entity-filter>
 
-<app-modal-user-form [userService]="userService" (valueForm)="updateTable.onReload()"></app-modal-user-form>
-<!-- <div class="flex items-center justify-between mb-4">
-  <h2 class="text-3xl text-gray-700 font-bold">Usuarios</h2>
-  <button 
-    (click)="openModalRegister()"
-    class="ml-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-200">
-    + Registrar
-  </button>
-</div>
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4 gap-y-4">
-        <app-date-range-table 
-          (dateRangeSelected)="handleDateRange($event)" 
-          (dateRangeCleared)="handleCancelDateFilter()">
-        </app-date-range-table>
-        <app-search-table 
-          (onSearch)="handleSearch($event)" 
-          (noSearch)="handleCancelSearchFilter()">
-        </app-search-table>
-    </div>
-    <app-data-table 
-      [columns]="columns" 
-      [data]="pageable.content">
-    </app-data-table>
-</div>
-<app-pagination-table
-    [totalPages]="pageable.totalPages"
-    [currentPage]="pageable.number"
-    (pageChange)="onPageChange($event)">
-</app-pagination-table>
-<app-modal-user-form 
-      (valueForm)="reloadData()">
-</app-modal-user-form> -->
+<app-modal-user-form [userService]="userService" (valueForm)="entityFilter.onReload()" #modal></app-modal-user-form>

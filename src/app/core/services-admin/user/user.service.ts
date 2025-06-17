@@ -7,6 +7,7 @@ import { nameEndpints } from '../../name-enpoints/name-endpoints';
 import { User } from '../../models/user.model';
 import { Page } from '../../models/pageable.model';
 import { IUserService } from './IUserService';
+import { AUTH_SERVICE_TOKEN } from '../../models/token-injection.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,13 @@ import { IUserService } from './IUserService';
 export class UserService implements IUserService {
 
   private http = inject(HttpClient);
+  private authService = inject(AUTH_SERVICE_TOKEN)
+    
+  codebuffet: string = this.authService.userBuffet;
 
   getAll(page: number, size: number): Observable<Page<User>> {
-    const params = new HttpParams().set('page', page.valueOf()).set('size', size.valueOf());
-    const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}`;
+    const params = new HttpParams().set('page', page.valueOf()).set('size', size.valueOf()).set('sort', "asc");
+    const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/findAllAdmin/${this.codebuffet}`;
       return this.http.get<any>(url, {params: params})
         .pipe(catchError(this.handleError));
   }
@@ -30,54 +34,42 @@ export class UserService implements IUserService {
   }
 
   getUsersByDateRange(start: string, end: string, page: number, size: number): Observable<Page<User>> {
-    const params = new HttpParams().set('start', start).set('end', end).set('page', page.valueOf()).set('size', size.valueOf());
+    const params = new HttpParams().set('startDate', start).set('endDate', end).set('page', page.valueOf()).set('size', size.valueOf());
     const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/date-range`;
       return this.http.get<any>(url, { params })
         .pipe(catchError(this.handleError));
   }
 
   getUsersBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number): Observable<Page<User>> {
-    const params = new HttpParams().set('searchText', searchText).set('start', start).set('end', end).set('page', page.valueOf()).set('size', size.valueOf());
+    const params = new HttpParams().set('search', searchText).set('start', start).set('end', end).set('page', page.valueOf()).set('size', size.valueOf());
     const url: string = `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/date-search`;
       return this.http.get<any>(url, { params })
         .pipe(catchError(this.handleError));
   }
 
   register(userData: User): Observable<any> {
-      return this.http.post<any>(`${environment.baseUrl}${nameEndpints.usuarioEndpoint}/register`, userData)
+      return this.http.post<any>(`${environment.baseUrl}${nameEndpints.usuarioEndpoint}/saveAdmin/${this.codebuffet}`, userData)
       .pipe(catchError(this.handleError));
   }
 
   update(userId: number, userData: User): Observable<any>{
     return this.http
       .put<any>(
-        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/update?idUser=${userId}`,userData)
+        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/update?idUser=${userId}`,userData)
       .pipe(catchError(this.handleError));
   }
 
-
-
-
-  updatePerfil(usuarioData: DataUser): Observable<any>{
+  disabled(code: string, enable: boolean): Observable<any>{
     return this.http
-      .put<any>(
-        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/updatePerfil`,usuarioData)
+      .patch<any>(
+        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/enable`, { code, enable })
       .pipe(catchError(this.handleError));
   }
-
-  delete(companyId: number, rol: string): Observable<any> {
+  
+  delete(code: string): Observable<any> {
     return this.http
-      .delete(
-        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/deleteUsuario?idUsuario=${companyId}&rol=${rol}`
-      )
-      .pipe(catchError(this.handleError));
-  }
-
-  findByCorreoUsuario(): Observable<DataUser> {
-    return this.http
-      .get<DataUser>(
-        `${environment.baseUrl}api/${nameEndpints.usuarioEndpoint}/findUsuarioByCorreo`
-      )
+      .delete<any>(
+        `${environment.baseUrl}${nameEndpints.usuarioEndpoint}/delete/${code}`)
       .pipe(catchError(this.handleError));
   }
     

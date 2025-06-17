@@ -10,28 +10,32 @@ import { CaseRequest } from '../../../core/models/case-request.model';
 import { ModalEntityType } from '../../../core/models/modal-entity-type';
 import { EntityFilterComponent } from '../../../shared/components-admin/entity-filter/entity-filter.component';
 import { ModalRequestViewComponent } from '../modal-request-view/modal-request-view.component';
+import { ModalRequestFormComponent } from '../modal-request-form/modal-request-form.component';
 
 @Component({
   selector: 'app-accepted-request',
   standalone: true,
-  imports: [EntityFilterComponent, ModalRequestViewComponent],
+  imports: [EntityFilterComponent, ModalRequestViewComponent, ModalRequestFormComponent],
   templateUrl: './accepted-request.component.html',
   styleUrl: './accepted-request.component.css'
 })
 export class AcceptedRequestComponent {
 
-  entity: ModalEntityType = 'case-request';
+  entity: ModalEntityType = 'request-approved';
 
   modalService = inject(ModalService);
   requestService = inject(REQUEST_SERVICE_TOKEN);
-  isRequest:boolean = true;
+
+  isRequestApproved:boolean = true;
 
   columns: DataTableColumn[] = [
+    { label: 'Codigo', dataKey: 'code' },
     { label: 'Título del Caso', dataKey: 'title' },
     { label: 'Descripcion', dataKey: 'description' },
     { label: 'Tipo de Caso', dataKey: 'type_case' },
     { label: 'Cliente', dataKey: 'customer' },
-    { label: 'Fecha de Creacion', dataKey: 'application_date' }
+    { label: 'Abogado', dataKey: 'lawyer' },
+    { label: 'Fecha de Creacion', dataKey: 'creation' }
   ];
 
   loadUsers = (
@@ -55,7 +59,7 @@ export class AcceptedRequestComponent {
     }
   };
 
-  // openModalRegister() {
-  //   this.modalService.openModalForCreation(this.entity);
-  // }
+  openModalRegister() {
+    this.modalService.openModalForCreation(this.entity);
+  }
 }

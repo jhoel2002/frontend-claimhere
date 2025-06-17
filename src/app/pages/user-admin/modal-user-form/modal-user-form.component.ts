@@ -81,7 +81,7 @@ export class ModalUserFormComponent implements OnInit {
   fillForm(data: Partial<User>) {
     this.form.patchValue({
       name: data.name,
-      lastname: data.lastname,
+      lastname: data.last_name,
       address: data.address,
       phone: data.phone,
       email: data.email,
@@ -126,7 +126,7 @@ export class ModalUserFormComponent implements OnInit {
   private createForm() {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      lastname: ['', Validators.required],
+      last_name: ['', Validators.required],
       address: ['', Validators.required],
       phone: ['', Validators.required],
       // tipoDocIdentidad: ['', [Validators.required]],
@@ -224,6 +224,40 @@ export class ModalUserFormComponent implements OnInit {
     });
   }
 
+  disableItem(item: any) {
+    if (!item?.code) return;
+    const newStatus = !item.enabled;
+
+    this.userService
+      .disabled(item.code, newStatus)
+      .subscribe({
+        next: () => {
+          this.alertService.success({ message: `Usuario con codigo ${item.code} actualizado correctamente` }).then(() => {
+            this.valueForm.emit();
+            this.close();
+          });
+        },
+        error: (error: any) => {
+          this.alertService.error({ message: error });
+        },
+      });
+  }
+
+  deleteItem(item: any) {
+    if (!item?.code) return;
+    this.userService.delete(item.code).subscribe({
+      next: () => {
+        this.alertService.success({ message: `Usuario con codigo ${item.code} eliminado correctamente` }).then(() => {
+          this.valueForm.emit();
+          this.close();
+        });
+      },
+      error: (error: any) => {
+        this.alertService.error({ message: error });
+      }
+    });
+  }
+
   get showChangePassword(){
     return this.form.get('showChangePassword');
   }
@@ -232,8 +266,8 @@ export class ModalUserFormComponent implements OnInit {
     return this.form.get('name');
   }
 
-  get lastname() {
-    return this.form.get('lastname');
+  get last_name() {
+    return this.form.get('last_name');
   }
 
   get email() {

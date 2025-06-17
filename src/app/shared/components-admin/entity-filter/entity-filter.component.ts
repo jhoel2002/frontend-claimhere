@@ -18,10 +18,12 @@ import { NgIf } from '@angular/common';
 })
 export class EntityFilterComponent<T> implements OnInit {
 
-  @Input() isRequest = false;
   @Input() title: string = '';
   @Input() columns: DataTableColumn[] = [];
   @Input() entity!: ModalEntityType;
+  
+  isDisabled: boolean = false;
+
   @Input() fetchFunction!: (
     search: string,
     start: string,
@@ -31,6 +33,9 @@ export class EntityFilterComponent<T> implements OnInit {
   ) => Observable<Page<T>>;
 
   @Output() onRegister = new EventEmitter<void>();
+
+  @Output() onDelete = new EventEmitter<any>();
+  @Output() onDisable = new EventEmitter<any>();
 
   pageable: Page<T> = {
     content: [],
@@ -97,6 +102,18 @@ export class EntityFilterComponent<T> implements OnInit {
 
   triggerRegister() {
     this.onRegister.emit();
+  }
+
+  triggerDelete(item: any) {
+    this.onDelete.emit(item);
+  }
+
+  triggerDisable(item: any) {
+    this.onDisable.emit(item);
+  }
+
+  triggerDisableUser(isDisabled: boolean) {
+    this.isDisabled = isDisabled;
   }
 
 }

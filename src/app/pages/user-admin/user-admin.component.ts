@@ -24,105 +24,15 @@ import { ModalEntityType } from '../../core/models/modal-entity-type';
 })
 export class UserAdminComponent {
 
-  // pageable: Page<User> = {q
-  //   content: [],
-  //   totalPages: 0,
-  //   totalElements: 0,
-  //   size: 9,
-  //   number: 0
-  // };
-
-  // dateRange: {start: string, end: string, filterApplied: boolean} = {start: '', end: '', filterApplied: false};
-
-  // searchText: {searchInput: string, isSearch: boolean} = {searchInput: '', isSearch: false};
-
-  // userService = inject(UserService);
-  // modalService = inject(ModalService);
-
-  // columns: DataTableColumn[] = [
-  //   { label: 'Nombre', dataKey: 'name' },
-  //   { label: 'Apellido', dataKey: 'lastname' },
-  //   { label: 'Correo', dataKey: 'email'},
-  //   { label: 'Telefono', dataKey: 'phone' },
-  //   { label: 'Rol', dataKey: 'role' },
-  //   { label: 'Direccion', dataKey: 'address' },
-  //   { label: 'Fecha de Creacion', dataKey: 'creation' },
-  // ];
-
-  // ngOnInit(): void {
-  //   this.loadUsers();
-  // }
-
-  // openModalRegister() {
-  //   this.modalService.openModalForCreation(); 
-  // }
-
-  // loadUsers() {
-  //   let request$: Observable<Page<User>>;
-
-  //   const hasDate = this.dateRange.filterApplied;
-  //   const hasSearch = this.searchText.isSearch;
-
-  //   if (hasDate && hasSearch) {
-  //     request$ = this.userService.getUsersBySearchAndDateSimulation(
-  //       this.searchText.searchInput, this.dateRange.start, this.dateRange.end, this.pageable.number, this.pageable.size);
-  //   } else if (hasDate) {
-  //     request$ = this.userService.getUsersByDateRangeSimulation(
-  //       this.dateRange.start, this.dateRange.end, this.pageable.number, this.pageable.size);
-  //   } else if (hasSearch) {
-  //     request$ = this.userService.searchSimulation(
-  //       this.searchText.searchInput, this.pageable.number, this.pageable.size);
-  //   } else {
-  //     request$ = this.userService.getAllUSimulation(this.pageable.number, this.pageable.size);
-  //   }
-
-  //   request$.subscribe(data => {
-  //     this.pageable = data;
-  //   });
-  // }
-
-  // handleDateRange(dateRange: {start: string, end: string, filterApplied: boolean}) {
-  //   this.dateRange = dateRange;
-  //   this.pageable.number = 0;
-  //   this.loadUsers();
-  // }
-  
-  // handleSearch(searchText: {searchInput: string, isSearch: boolean}) {
-  //   this.searchText = searchText;
-  //   this.pageable.number = 0;
-  //   this.loadUsers();
-  // }
-
-  // handleCancelSearchFilter() {
-  //   this.pageable.number = 0;
-  //   this.searchText.isSearch = false;
-  //   this.loadUsers();
-  // }
-
-  // handleCancelDateFilter() {
-  //   this.pageable.number = 0;
-  //   this.dateRange.filterApplied = false;
-  //   this.loadUsers();
-  // }
-
-  // onPageChange(page: number) {
-  //   this.pageable.number = page;
-  //   this.loadUsers();
-  // }
-
-  // reloadData() {
-  //   this.pageable.number = 0;
-  //   this.loadUsers();
-  // }
-
   entity: ModalEntityType = 'user';
+  isDisabled: boolean = false;
 
   userService = inject(USER_SERVICE_TOKEN);
   modalService = inject(ModalService);
 
   columns: DataTableColumn[] = [
     { label: 'Nombre', dataKey: 'name' },
-    { label: 'Apellido', dataKey: 'lastname' },
+    { label: 'Apellido', dataKey: 'last_name' },
     { label: 'Correo', dataKey: 'email' },
     { label: 'Teléfono', dataKey: 'phone' },
     { label: 'Rol', dataKey: 'role' },

@@ -5,11 +5,13 @@ import { AuthService } from '../../core/services-admin/auth/auth.service';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthData } from '../../core/models/auth-data.model';
+import { AUTH_SERVICE_TOKEN } from '../../core/models/token-injection.model';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [HttpClientModule, ReactiveFormsModule ],
+  imports: [HttpClientModule, ReactiveFormsModule, NgIf],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -18,7 +20,7 @@ export class LoginComponent {
   errorMessage: string = '';
 
   fb = inject(FormBuilder);
-  authService = inject(AuthService);
+  authService = inject(AUTH_SERVICE_TOKEN);
   router = inject(Router);
 
   loginForm = this.fb.group({
@@ -34,7 +36,6 @@ export class LoginComponent {
     return this.loginForm.get('password');
   }
 
-  // Método optimizado para el login usando Observables y subscribe()
   onLogin(): void {
     if (this.loginForm.invalid) {
       this.errorMessage = 'Por favor, completa todos los campos correctamente.';
@@ -45,18 +46,11 @@ export class LoginComponent {
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
+        const buffet = response.buffet;
+        this.router.navigate([`/${buffet}/user`]);
       },
       error: (error) => {
-        // Manejo detallado de errores
-        if (error.status === 401) {
-          this.errorMessage = 'Credenciales incorrectas. Inténtalo nuevamente.';
-        } else {
-          this.errorMessage = 'Error al iniciar sesión. Por favor, inténtalo más tarde.';
-        }
-      },
-      complete: () => {
-        // Es importante que el spinner se oculte después de completar la solicitud
-          this.router.navigate(['/admin/user']);
+        this.errorMessage = error;
       }
     });
   }

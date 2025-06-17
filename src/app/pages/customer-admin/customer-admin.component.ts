@@ -24,14 +24,14 @@ export class CustomerAdminComponent {
   customerService = inject(CUSTOMER_SERVICE_TOKEN);
 
   columns: DataTableColumn[] = [
-    { label: 'Nombres', dataKey: 'name' },
-    { label: 'Apellidos', dataKey: 'last_name' },
-    { label: 'Tipo de Documento', dataKey: 'type_document' },
-    { label: 'Documento', dataKey: 'document' },
+    { label: 'Codigo', dataKey: 'code' },
+    { label: 'Nombres', dataKey: 'fullName' },
+    { label: 'Tipo de Documento', dataKey: 'document_type' },
+    { label: 'Documento', dataKey: 'document_number' },
     { label: 'Correo', dataKey: 'email' },
     { label: 'Telefono', dataKey: 'phone' },
     { label: 'Direccion', dataKey: 'address' },
-    { label: 'Fecha de Creacion', dataKey: 'creation' }
+    { label: 'Fecha de Creacion', dataKey: 'creation' },
   ];
 
   loadUsers = (
