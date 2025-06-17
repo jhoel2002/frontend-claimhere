@@ -127,7 +127,7 @@ export class RequestService implements IRequestService {
     formData.append('cotizacion', cotizacion);
 
     // Construir URL con codeCustomer
-    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/saveEvidenceMassive/${codeCustomer}`;
+    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/saveEvidenceMassiveQuotation/${codeCustomer}`;
 
     return this.http.post<any>(url, formData).pipe(
       catchError(this.handleError)
