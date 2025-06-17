@@ -1,117 +1,148 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { inject, Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
-import { DataUser } from '../../models/data-user.model';
 import { environment } from '../../../../environments/environment';
 import { AuthResponse } from '../../models/auth-response.model';
 import { AuthData } from '../../models/auth-data.model';
-import { nameEndpints } from '../../name-enpoints/name-endpoints';
 import { isPlatformBrowser } from '@angular/common';
+import { IAuthService } from './IAuth.service';
+import { jwtDecode } from 'jwt-decode';
 
+interface JwtPayload {
+  sub: string;
+  authorities: string;
+  exp: number;
+  buffet: string;
+  user: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements IAuthService {
 
   private isBrowser: boolean;
 
-  private static expirationTimeInSeconds: number = 1440;
-  //1440 = 24 minutos
-  currentUserData: BehaviorSubject<AuthResponse> =new BehaviorSubject<AuthResponse>({
+  private http = inject(HttpClient);
+
+  private static readonly TOKEN_KEY = 'token';
+
+  currentUserData$: BehaviorSubject<AuthResponse> =new BehaviorSubject<AuthResponse>({
     username: '',
     role: '',
-    token: ''
+    token: '',
+    buffet: '',
+    user: ''
   });
 
-  currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  currentUserLoginOn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient,
-     @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
     if (this.isBrowser) {
-        const user = this.getUser();
-        const userData = user ? {
-        username: user.username || "",
-        role: user.roles ? user.roles[0] || "" : ""
-      } : null;
-
-      this.currentUserData = new BehaviorSubject<AuthResponse>({
-        token: localStorage.getItem("token") || "",
-        username: userData?.username || "",
-        role: userData?.role || ""
-      });
+      const token = localStorage.getItem(AuthService.TOKEN_KEY);
+      if (token && !this.isExpired(token)) {
+        const userData = this.decodeToken(token);
+        this.currentUserData$.next({ ...userData, token, buffet: userData.buffet,  user: userData.user });
+        this.currentUserLoginOn$.next(true);
+      }
     }
+  }
+  private decodeToken(token: string): { username: string; role: string; user: string; buffet: string } {
+    const payload = jwtDecode<JwtPayload>(token);
+    let role = '';
+    let buffet = ''; // Default value for buffet
+    let user = '';
+    try {
+      const authoritiesArray = JSON.parse(payload.authorities) as { authority: string }[];
+      role = authoritiesArray?.[0]?.authority || '';
+      buffet = payload.buffet || '';
+      user = payload.user || '';
+    } catch (error) {
+      console.warn('No se pudo parsear authorities del token:', error);
+    }
+    return {
+      username: payload.sub,
+      role,
+      buffet,
+      user
+    };
   }
 
   login(credentials: AuthData): Observable<any> {
     // const headers = { 'skip-interceptor': 'true' };
     return this.http.post<any>(`${environment.baseUrl}login`, credentials).pipe(
-      tap((userData: AuthResponse) => {
-        localStorage.setItem("token", userData.token);
-        localStorage.setItem("user", JSON.stringify(userData));
-        
-        const expirationDate = Date.now() + AuthService.expirationTimeInSeconds * 1000;
-        localStorage.setItem("expiration", JSON.stringify({ expDate: expirationDate }));
+      tap(({ token }) => {
+        // Guarda sólo el token
+        localStorage.setItem(AuthService.TOKEN_KEY, token);
 
-        this.currentUserData.next(userData);
-        this.currentUserLoginOn.next(true);
+        // Actualiza subjects
+        const userData = this.decodeToken(token);
+        this.currentUserData$.next({ ...userData, token, buffet: userData.buffet,  user: userData.user });
+        this.currentUserLoginOn$.next(true);
       }),
-      map((userData: AuthResponse) => userData),
+      map(({ token }) => ({ ...this.decodeToken(token), token})),
       catchError(this.handleError)
     );
   }
 
   logout(): void {
-    localStorage.removeItem("expiration");
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    this.currentUserLoginOn.next(false);
-    this.currentUserData.next({
-      token: '',
-      username: '',
-      role: ''
-    });
+    if (!this.isBrowser) return;
+    localStorage.removeItem(AuthService.TOKEN_KEY);
+    this.currentUserData$.next({ username: '', role: '', token: '', buffet: '', user: '' });
+    this.currentUserLoginOn$.next(false);
   }
 
-  isTokenValid(): boolean {
-    const item = localStorage.getItem("expiration");
-    if (item) {
-      const expiration = JSON.parse(item).expDate;
-      if (expiration > Date.now()) {
+  private isExpired(token: string): boolean {
+    try {
+      const { exp } = jwtDecode<JwtPayload>(token);
+      if (typeof exp !== 'number') {
         return true;
       }
+      return Date.now() / 1000 >= exp;
+    } catch {
+      return true;
     }
-    return false;
   }
+  
+  isTokenValid(): boolean {
+    if (!this.isBrowser) return false;
 
-  private getUser() {
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
+    const token = this.userToken || localStorage.getItem(AuthService.TOKEN_KEY);
+    return token ? !this.isExpired(token) : false;
   }
 
   // Observar los datos del usuario
   get userData(): Observable<AuthResponse> {
-    return this.currentUserData.asObservable();
+    return this.currentUserData$.asObservable();
   }
 
   // Observar si el usuario está autenticado
   get userLoginOn(): Observable<boolean> {
-    return this.currentUserLoginOn.asObservable();
+    return this.currentUserLoginOn$.asObservable();
   }
 
   // Obtener el token del usuario
   get userToken(): string {
-    return this.currentUserData.value.token;
+    return this.currentUserData$.value.token;
+  }
+
+  // Obtener el token del usuario
+  get userBuffet(): string {
+    return this.currentUserData$.value.buffet;
+  }
+
+  // Obtener el token del usuario
+  get userRole(): string {
+    return this.currentUserData$.value.role;
   }
 
   // Manejo de errores
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Algo falló. Por favor intente nuevamente.';
-    if (error.status === 403 || error.status === 500) {
+    if (error.status === 403 || error.status === 401) {
       errorMessage = 'Credenciales incorrectas.';
     }
-    return throwError(() => new Error(errorMessage));
+    return throwError(() => errorMessage);
   }
 }

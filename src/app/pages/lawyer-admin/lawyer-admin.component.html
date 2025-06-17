@@ -1,0 +1,12 @@
+<app-entity-filter
+  [title]="'Lawyer'"
+  [columns]="columns"
+  [fetchFunction]="loadUsers"
+  (onRegister)="openModalRegister()"
+  [entity]="entity"
+  (onDelete)="modal.deleteItem($event)"
+  (onDisable)="modal.disableItem($event)"
+  #entityFilter>
+</app-entity-filter>
+
+<app-modal-lawyer-form [lawyerService]="lawyerService" (valueForm)="entityFilter.onReload()" #modal></app-modal-lawyer-form>

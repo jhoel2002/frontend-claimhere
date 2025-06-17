@@ -1,4 +1,9 @@
-<h2 class="text-3xl mb-4 dark:text-gray-700 font-bold">Reclamos Pendientes</h2>
-<app-date-table 
-    [columns]="columns" 
-    [data]="data"></app-date-table>
+<app-entity-filter
+  [title]="'Solicitudes pendientes'"
+  [columns]="columns"
+  [fetchFunction]="loadUsers"
+  [entity]="entity"
+  #updateTable>
+</app-entity-filter>
+
+<app-modal-request-view [entity]="entity" (dataUpdated)="updateTable.onReload()" [requestService]="requestService"></app-modal-request-view>

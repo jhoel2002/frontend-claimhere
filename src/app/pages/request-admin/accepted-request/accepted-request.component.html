@@ -1,4 +1,11 @@
-<h1 class="text-3xl mb-4 dark:text-gray-700 font-bold">Reclamos Aceptados</h1>
-<app-date-table 
-    [columns]="columns" 
-    [data]="data"></app-date-table>
+<app-entity-filter
+  [title]="'Solicitudes aprobadas'"
+  [columns]="columns"
+  [fetchFunction]="loadUsers"
+  [entity]="entity"
+  (onRegister)="openModalRegister()"
+  #updateTable>
+</app-entity-filter>
+
+<app-modal-request-view [entity]="entity" (dataUpdated)="updateTable.onReload()" [requestService]="requestService"></app-modal-request-view>
+<app-modal-request-form (valueForm)="updateTable.onReload()" [requestService]="requestService" [modalService]="modalService"></app-modal-request-form>

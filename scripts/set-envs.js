@@ -8,6 +8,7 @@ const envFileContentDev = `
 export const environment = {
     production: false,
     baseUrl: "${process.env['BASE_URL_DEV']}",
+    useMock: true
 };
 `;
 
@@ -15,6 +16,7 @@ const envFileContentProd = `
 export const environment = {
     production: true,
     baseUrl: "${process.env['BASE_URL_PROD']}",
+    useMock: false
 };
 `;
 

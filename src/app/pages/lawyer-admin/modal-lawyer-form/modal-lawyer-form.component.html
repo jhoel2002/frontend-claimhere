@@ -1,0 +1,146 @@
+<div *ngIf="isOpen()" class="fixed inset-0 z-50 flex items-center justify-center">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="close()"></div>
+  
+  <!-- Modal -->
+  <div class="relative bg-white rounded-lg shadow-xl w-full max-w-4xl m-4 animate-modal-up p-8 space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-gray-900">
+        {{ modalPayload?.mode === 'edit' ? 'Editar' : 'Crear nuevo' }} abogado
+      </h3>
+      <button 
+        (click)="close()"
+        class="text-gray-500 hover:text-gray-700  transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Content -->
+    <form [formGroup]="form" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Columna izquierda -->
+        <div class="space-y-4">
+          <!-- Nombres -->
+          <div class="form-group">
+            <label for="name-lawyer" class="text-sm font-medium text-gray-700 ">Nombres:</label>
+            <input type="text" id="name-lawyer" formControlName="name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="name?.invalid && name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="name?.errors?.['required']">Los nombres son requeridos.</div>
+            </div>
+          </div>
+
+          <!-- Apellidos -->
+          <div class="form-group">
+            <label for="lastname-lawyer" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
+            <input type="text" id="lastname-lawyer" formControlName="last_name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="last_name?.invalid && last_name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="last_name?.errors?.['required']">Los apellidos son requeridos.</div>
+            </div>
+          </div>
+
+          <!-- Descripción -->
+          <div class="form-group">
+            <label for="description-case" class="block text-sm font-medium text-gray-700">Descripción:</label>
+            <textarea
+              id="description-case"
+              rows="4"
+              formControlName="description"
+              class="shadow-xs bg-white border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            ></textarea>
+            <div *ngIf="description?.invalid && description?.touched" class="text-red-600 text-xs">
+              <div *ngIf="description?.errors?.['required']">La descripción es requerida.</div>
+            </div>
+          </div>
+
+          <!-- Direccion -->
+          <div class="form-group">
+            <label for="address-lawyer" class="text-sm font-medium text-gray-700 ">Direccion:</label>
+            <input type="text" id="address-lawyer" formControlName="address" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="address?.invalid && address?.touched" class="text-red-600 text-xs">
+              <div *ngIf="address?.errors?.['required']">La direccion es requerido.</div>
+            </div>
+          </div>
+
+          <!-- telefono -->
+          <div class="form-group">
+            <label for="phone-lawyer" class="text-sm font-medium text-gray-700 ">Telefono:</label>
+            <input type="text" id="phone-lawyer" formControlName="phone" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="phone?.invalid && phone?.touched" class="text-red-600 text-xs">
+              <div *ngIf="phone?.errors?.['required']">El telefono es requerido.</div>
+            </div>
+          </div>
+        </div> 
+
+        <!-- Columna derecha -->
+        <div class="space-y-4">
+          <!-- Especialidad de Caso -->
+          <!-- Tipo de Caso -->
+          <div class="form-group mt-4">
+            <label for="case_type_lawyer" class="text-sm font-medium text-gray-700">Tipo de caso:</label>
+            <select id="case_type_lawyer" formControlName="case_type" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="">Seleccione un tipo</option>
+              <option *ngFor="let type of caseTypes" [value]="type">{{ type }}</option>
+            </select>
+            <div *ngIf="case_type?.invalid && case_type?.touched" class="text-red-600 text-xs">
+              <div *ngIf="case_type?.errors?.['required']">El tipo de caso es requerido.</div>
+            </div>
+          </div>
+          
+          <!-- Correo -->
+          <div class="form-group">
+            <label for="email-lawyer" class="text-sm font-medium text-gray-700 ">Correo:</label>
+            <input type="text" id="email-lawyer" formControlName="email" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="email?.invalid && email?.touched" class="text-red-600 text-xs">
+              <div *ngIf="email?.errors?.['required']">El correo es requerido.</div>
+              <div *ngIf="email?.errors?.['email']">Ingresa un correo electrónico válido.</div>
+            </div>
+          </div>
+
+          <div class="space-y-4" *ngIf="!isEditMode || (isEditMode && showChangePassword?.value)">
+             <!-- Contraseña -->
+            <div class="form-group">
+              <label for="password-lawyer" class="text-sm font-medium text-gray-700 ">Contraseña:</label>
+              <input type="password" id="password-lawyer" formControlName="password" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div *ngIf="password?.invalid && password?.touched" class="text-red-600 text-xs">
+                <div *ngIf="password?.errors?.['required']">La contraseña es requerida.</div>
+              </div>
+            </div>
+
+            <!-- Confirmar Contraseña -->
+            <div class="form-group">
+              <label for="confirmation-password-lawyer" class="text-sm font-medium text-gray-700 ">Confirmar contraseña:</label>
+              <input type="password" id="confirmation-password-lawyer" formControlName="confirmationPassword" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div *ngIf="confirmationPassword?.invalid && confirmationPassword?.touched" class="text-red-600 text-xs">
+                <div *ngIf="confirmationPassword?.errors?.['required']">La confirmación de la contraseña es requerida.</div>
+                <div *ngIf="confirmationPassword?.errors?.['passwordMismatch']">Las contraseñas no coinciden.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cotización -->
+          <div class="form-group">
+            <label class="text-sm font-medium text-gray-700">Foto:</label>
+            <input type="file" (change)="onFotoSelected($event)" class="mt-1 block w-full p-2 text-sm text-gray-600">
+            <div *ngIf="uploadError" class="text-red-600 text-xs">{{ uploadError }}</div>
+          </div>
+
+          <div *ngIf="isEditMode" class="flex items-center space-x-2 mb-4">
+            <input type="checkbox" id="showChangePassword-lawyer" formControlName="showChangePassword" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+            <label for="showChangePassword-customer" class="text-sm text-gray-700">
+              ¿Desea cambiar la contraseña de este usuario?
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2">
+      <button type="button" (click)="close()" class="px-4 py-2 text-sm text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-200 focus:outline-none rounded-md font-medium text-center">Cancelar</button>
+      <button type="button" (click)="onSubmit()" class="px-4 py-2 text-sm text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none rounded-md font-medium text-center">Guardar</button>
+    </div>
+  </div>
+</div>

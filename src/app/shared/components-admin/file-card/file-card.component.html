@@ -1,0 +1,28 @@
+<div *ngIf="document"
+  class="cursor-pointer bg-gray-50 border border-gray-200 rounded-xl shadow-md
+         hover:shadow-lg transition-all duration-300 p-3 text-center
+         w-full"
+  [ngClass]="{ 'h-auto': showIcon, 'py-2': !showIcon }"
+  (click)="downloadFileByCode(document.code, document.name)">
+
+  <div class="flex flex-col items-center space-y-2">
+    <!-- Icono condicional -->
+    <div *ngIf="showIcon"
+      class="rounded-full bg-blue-100 w-12 h-12 flex items-center justify-center shadow-inner">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 12h6m-6 4h6M4 6a2 2 0 012-2h6l6 6v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" />
+      </svg>
+    </div>
+
+    <strong class="text-gray-900 text-xs truncate w-full">
+      {{ document.name }}
+    </strong>
+  </div>
+
+  <div class="mt-3 border-t pt-2 text-xs text-blue-600 flex justify-center items-center space-x-1">
+    <i class="fe fe-download text-sm"></i>
+    <span>Descargar</span>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div *ngIf="isOpen()" class="fixed inset-0 z-50 flex justify-center overflow-y-auto">
+
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="close()"></div>
+  
+  <!-- Modal -->
+  <div class="relative my-auto 
+              w-full max-w-4xl
+              bg-white rounded-lg shadow-xl
+              animate-modal-up p-8 space-y-6 m-4
+              max-h-[calc(100vh-2rem)] overflow-y-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-gray-900">
+        {{ modalPayload?.mode === 'edit' ? 'Editar' : 'Crear nuevo' }} buffet
+      </h3>
+      <button 
+        (click)="close()"
+        class="text-gray-500 hover:text-gray-700  transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Content -->
+    <form [formGroup]="form" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Columna izquierda -->
+        <div class="space-y-4">
+          <!-- Nombre -->
+          <div class="form-group">
+            <label for="name-customer" class="text-sm font-medium text-gray-700 ">Nombre:</label>
+            <input type="text" id="name-customer" formControlName="name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="name?.invalid && name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="name?.errors?.['required']">El nombre es requerido.</div>
+            </div>
+          </div>
+
+          <!-- Descripcion -->
+          <div class="form-group">
+            <label for="description-buffet" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
+            <input type="text" id="description-buffet" formControlName="description" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="description?.invalid && description?.touched" class="text-red-600 text-xs">
+              <div *ngIf="description?.errors?.['required']">La Descripcion es requerida.</div>
+            </div>
+          </div>
+
+          <!-- Imagen -->
+          <div class="form-group">
+            <label for="img-buffet" class="text-sm font-medium text-gray-700 ">Url de imagen:</label>
+            <input type="text" id="img-buffet" formControlName="img" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="img?.invalid && img?.touched" class="text-red-600 text-xs">
+              <div *ngIf="img?.errors?.['required']">La imagen es requerida.</div>
+            </div>
+          </div>
+        </div> 
+
+        <!-- Columna derecha -->
+        <div class="space-y-4">
+          <!-- Latitud -->
+          <div class="form-group">
+            <label for="latitud-buffet" class="text-sm font-medium text-gray-700 ">Latitud:</label>
+            <input type="text" id="latitud-buffet" formControlName="latitud" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="latitud?.invalid && latitud?.touched" class="text-red-600 text-xs">
+              <div *ngIf="latitud?.errors?.['required']">La latitud es requerida.</div>
+            </div>
+          </div>
+
+          <!-- Longitud -->
+          <div class="form-group">
+            <label for="longitud-buffet" class="text-sm font-medium text-gray-700 ">Longitud:</label>
+            <input type="text" id="longitud-buffet" formControlName="longitud" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="longitud?.invalid && longitud?.touched" class="text-red-600 text-xs">
+              <div *ngIf="longitud?.errors?.['required']">La longitud es requerida.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2">
+      <button type="button" (click)="close()" class="px-4 py-2 text-sm text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-200 focus:outline-none rounded-md font-medium text-center">Cancelar</button>
+      <button type="button" (click)="onSubmit()" class="px-4 py-2 text-sm text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none rounded-md font-medium text-center">Guardar</button>
+    </div>
+  </div>
+</div>

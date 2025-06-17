@@ -1,0 +1,143 @@
+<div *ngIf="isOpen()" class="fixed inset-0 z-50 flex justify-center overflow-y-auto">
+
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="close()"></div>
+  
+  <!-- Modal -->
+  <div class="relative my-auto 
+              w-full max-w-4xl
+              bg-white rounded-lg shadow-xl
+              animate-modal-up p-8 space-y-6 m-4
+              max-h-[calc(100vh-2rem)] overflow-y-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-gray-900">
+        {{ modalPayload?.mode === 'edit' ? 'Editar' : 'Crear nuevo' }} cliente
+      </h3>
+      <button 
+        (click)="close()"
+        class="text-gray-500 hover:text-gray-700  transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Content -->
+    <form [formGroup]="form" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Columna izquierda -->
+        <div class="space-y-4">
+          <!-- Nombres -->
+          <div class="form-group">
+            <label for="name-customer" class="text-sm font-medium text-gray-700 ">Nombres:</label>
+            <input type="text" id="name-customer" formControlName="name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="name?.invalid && name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="name?.errors?.['required']">Los nombres son requeridos.</div>
+            </div>
+          </div>
+
+          <!-- Apellidos -->
+          <div class="form-group">
+            <label for="lastname-customer" class="text-sm font-medium text-gray-700 ">Apellidos:</label>
+            <input type="text" id="lastname-customer" formControlName="last_name" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="last_name?.invalid && last_name?.touched" class="text-red-600 text-xs">
+              <div *ngIf="last_name?.errors?.['required']">Los apellidos son requeridos.</div>
+            </div>
+          </div>
+
+          <!-- Tipo de Documento -->
+          <div class="form-group">
+            <label for="document-type-customer" class="text-sm font-medium text-gray-700 ">Tipo de documento:</label>
+            <select id="document-type-customer" formControlName="document_type" class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option disabled selected hidden value="">Seleccione un tipo de documento</option>
+              <option value="DNI">DNI</option>
+              <option value="PASAPORTE">PASAPORTE</option>
+              <option value="CE">CARNET EXT.</option>
+            </select>
+            <div *ngIf="document_type?.invalid && document_type?.touched" class="text-red-600 text-xs">
+              <div *ngIf="document_type?.errors?.['required']">El tipo de documento es requerido.</div>
+            </div>
+          </div>
+
+          <!-- Documento -->
+          <div class="form-group">
+            <label for="document_number-customer" class="text-sm font-medium text-gray-700 ">Documento:</label>
+            <input type="text" id="document_number-customer" formControlName="document_number" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="document_number?.invalid && document_number?.touched" class="text-red-600 text-xs">
+              <div *ngIf="document_number?.errors?.['required']">El documento es requerido.</div>
+              <div *ngIf="document_number?.errors?.['invalidNumberDNI']">El DNI debe tener solo números.</div>
+              <div *ngIf="document_number?.errors?.['invalidDigitosDNI']">El DNI debe tener 8 dígitos.</div>
+              <div *ngIf="document_number?.errors?.['invalidPassportOrCarnet']">El documento debe tener como máximo 20 caracteres.</div>
+            </div>
+          </div>
+        </div> 
+
+        <!-- Columna derecha -->
+        <div class="space-y-4">
+          <!-- telefono -->
+          <div class="form-group">
+            <label for="phone-customer" class="text-sm font-medium text-gray-700 ">Telefono:</label>
+            <input type="text" id="phone-customer" formControlName="phone" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="phone?.invalid && phone?.touched" class="text-red-600 text-xs">
+              <div *ngIf="phone?.errors?.['required']">El telefono es requerido.</div>
+            </div>
+          </div>
+
+          <!-- Direccion -->
+          <div class="form-group">
+            <label for="address-customer" class="text-sm font-medium text-gray-700 ">Direccion:</label>
+            <input type="text" id="address-customer" formControlName="address" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="address?.invalid && address?.touched" class="text-red-600 text-xs">
+              <div *ngIf="address?.errors?.['required']">La direccion es requerido.</div>
+            </div>
+          </div>
+
+          <!-- Correo -->
+          <div class="form-group">
+            <label for="email-customer" class="text-sm font-medium text-gray-700 ">Correo:</label>
+            <input type="text" id="email-customer" formControlName="email" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div *ngIf="email?.invalid && email?.touched" class="text-red-600 text-xs">
+              <div *ngIf="email?.errors?.['required']">El correo es requerido.</div>
+              <div *ngIf="email?.errors?.['email']">Ingresa un correo electrónico válido.</div>
+            </div>
+          </div>
+
+          <div class="space-y-4" *ngIf="!isEditMode || (isEditMode && showChangePassword?.value)">
+             <!-- Contraseña -->
+            <div class="form-group">
+              <label for="password-customer" class="text-sm font-medium text-gray-700 ">Contraseña:</label>
+              <input type="password" id="password-customer" formControlName="password" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div *ngIf="password?.invalid && password?.touched" class="text-red-600 text-xs">
+                <div *ngIf="password?.errors?.['required']">La contraseña es requerida.</div>
+              </div>
+            </div>
+
+            <!-- Confirmar Contraseña -->
+            <div class="form-group">
+              <label for="confirmation-password-customer" class="text-sm font-medium text-gray-700 ">Confirmar contraseña:</label>
+              <input type="password" id="confirmation-password-customer" formControlName="confirmationPassword" class="form-input mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <div *ngIf="confirmationPassword?.invalid && confirmationPassword?.touched" class="text-red-600 text-xs">
+                <div *ngIf="confirmationPassword?.errors?.['required']">La confirmación de la contraseña es requerida.</div>
+                <div *ngIf="confirmationPassword?.errors?.['passwordMismatch']">Las contraseñas no coinciden.</div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="isEditMode" class="flex items-center space-x-2 mb-4">
+            <input type="checkbox" id="showChangePassword-customer" formControlName="showChangePassword" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+            <label for="showChangePassword-customer" class="text-sm text-gray-700">
+              ¿Desea cambiar la contraseña de este usuario?
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2">
+      <button type="button" (click)="close()" class="px-4 py-2 text-sm text-white bg-gray-800 hover:bg-gray-700 focus:ring-4 focus:ring-gray-200 focus:outline-none rounded-md font-medium text-center">Cancelar</button>
+      <button type="button" (click)="onSubmit()" class="px-4 py-2 text-sm text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none rounded-md font-medium text-center">Guardar</button>
+    </div>
+  </div>
+</div>

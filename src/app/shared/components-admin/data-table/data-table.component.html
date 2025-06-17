@@ -1,0 +1,51 @@
+
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+            <th *ngIf="entity === 'lawyer' || entity === 'user'" scope="col" class="p-4">
+                Habilitado
+            </th>
+            <ng-container *ngFor="let column of columns">
+                <th scope="col" class="px-6 py-3">
+                    {{column.label}}
+                </th>
+            </ng-container>
+
+            <th scope="col" class="px-6 py-3">
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of data; let rowIndex = index" class="bg-white border-b border-gray-200 hover:bg-gray-50">
+            <ng-container *ngFor="let column of columns; let i = index">
+                <td *ngIf="(entity === 'lawyer' || entity === 'user') && (i == 0)" class="w-4 p-4">
+                    <div class="flex items-center justify-center">
+                    <input
+                        id="checkbox-table-search-{{ i }}"
+                        type="checkbox"
+                        [checked]="row.enabled"
+                        [disabled]="true"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 not-even:focus:ring-2"/>
+                        <label for="checkbox-table-search-{{ i }}" class="sr-only">checkbox</label>
+                    </div>
+                </td>
+                <td class="px-6 py-4">
+                    {{ row[column.dataKey] }}
+                </td> 
+                <td *ngIf="i === columns.length - 1" >
+                    <app-dropdown-action-table
+                        [row]="rowIndex"
+                        [entity]="entity"
+                        (viewRequest)="viewRequest(row.code)"
+                        (editItem)="editItem(row)"
+                        (deleteItem)="deleteItem(row)"
+                        [isEnabled]="row.enabled"
+                        (disableItem)="disableItem(row)">
+                    </app-dropdown-action-table>
+                </td>
+            </ng-container>
+        </tr>
+    </tbody>
+</table>
+

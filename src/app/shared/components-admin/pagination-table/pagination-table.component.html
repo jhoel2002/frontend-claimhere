@@ -1,0 +1,36 @@
+<nav class="flex justify-center my-4">
+  <ul class="inline-flex -space-x-px text-sm">
+    <!-- Botón Anterior -->
+    <li>
+      <button 
+        [disabled]="currentPage === 0"
+        (click)="changePage(currentPage - 1)"
+        class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+        Anterior
+      </button>
+    </li>
+
+    <!-- Botones numéricos -->
+    <li *ngFor="let page of pages">
+      <button 
+        (click)="changePage(page)"
+        [ngClass]="{
+          'bg-blue-500 text-white border border-blue-500 hover:bg-blue-600': currentPage === page,
+          'bg-white text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700': currentPage !== page
+        }"
+        class="flex items-center justify-center px-3 h-8 leading-tight">
+        {{ page + 1 }}
+      </button>
+    </li>
+
+    <!-- Botón Siguiente -->
+    <li>
+      <button 
+        [disabled]="currentPage >= totalPages - 1"
+        (click)="changePage(currentPage + 1)"
+        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+        Siguiente
+      </button>
+    </li>
+  </ul>
+</nav>

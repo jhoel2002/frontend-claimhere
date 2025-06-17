@@ -1,0 +1,49 @@
+<div class="form-group dropdown-container">
+  <!-- <label
+    for="value-case"
+    [ngClass]="label === 'Abogado' ? 'text-lg font-semibold text-gray-800' : 'text-sm font-medium text-gray-700'"
+  >
+  {{ label }}:
+  </label> -->
+  <input
+    type="text"
+    class="form-select mt-1 block w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    placeholder="Escribe para buscar"
+    [formControl]="control"
+    id="value-case"
+    (focus)="onInputFocus()"
+  />
+
+  <div *ngIf="isLoading" class="flex items-center gap-2 mt-1 text-xs">
+    <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+    </svg>
+    <span class="text-xs text-blue-600">Buscando...</span>
+  </div>
+  <div *ngIf="errorMsg" class="text-red-600 text-xs">{{ errorMsg }}</div>
+  <div *ngIf="(filtered$ | async) as values">
+    <div *ngIf="!isLoading && showDropdown">
+      <div *ngIf="values.length > 0; else noResults">
+        <div>
+          <ul class="dropdown-list">
+              <li
+                *ngFor="let value of values"
+                (click)="onValuesSelected(value)"
+                class="dropdown-item">
+                {{ value.busqueda }}
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
+    <ng-template #noResults>
+      <div *ngIf="control.value && control.value.trim().length > 3">
+        <div class="text-red-600 text-xs">
+          No se encontró el {{label}}.<br>
+          Regístrelo en el panel de administración de {{label}}s.
+        </div>
+      </div>
+      </ng-template>
+  </div>
+</div>

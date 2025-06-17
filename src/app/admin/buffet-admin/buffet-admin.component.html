@@ -1,0 +1,10 @@
+<app-entity-filter
+  [title]="'Buffet'"
+  [columns]="columns"
+  [fetchFunction]="loadUsers"
+  (onRegister)="openModalRegister()"
+  [entity]="entity"
+  #updateTable>
+</app-entity-filter>
+
+<app-modal-buffet-form [buffetService]="buffetService" (valueForm)="updateTable.onReload()"></app-modal-buffet-form>

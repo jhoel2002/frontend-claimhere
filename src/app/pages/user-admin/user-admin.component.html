@@ -1,4 +1,12 @@
-<h2 class="text-3xl mb-4 dark:text-gray-700 font-bold">Usuarios</h2>
-<app-date-table 
-    [columns]="columns" 
-    [data]="data"></app-date-table>
+<app-entity-filter
+  [title]="'Empleados'"
+  [columns]="columns"
+  [fetchFunction]="loadCustomers"
+  (onRegister)="openModalRegister()"
+  [entity]="entity"
+  (onDelete)="modal.deleteItem($event)"
+  (onDisable)="modal.disableItem($event)"
+  #entityFilter>
+</app-entity-filter>
+
+<app-modal-user-form [userService]="userService" (valueForm)="entityFilter.onReload()" #modal></app-modal-user-form>
