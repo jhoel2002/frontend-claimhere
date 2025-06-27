@@ -1,6 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services-admin/auth/auth.service';
 import { AUTH_SERVICE_TOKEN } from '../../../core/models/token-injection.model';
 import { NgIf } from '@angular/common';
 
@@ -13,18 +12,17 @@ import { NgIf } from '@angular/common';
 })
 export class SideBarComponent {
 
-  authService = inject(AUTH_SERVICE_TOKEN);
-  router = inject(Router);
-
-  buffet: string = this.authService.userBuffet;
-  role: string = this.authService.userRole;
-
   isDropdownOpen = false;
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
-  @Input() isCollapsed = false;
+
+  authService = inject(AUTH_SERVICE_TOKEN);
+  router = inject(Router);
+
+  buffet: string = this.authService.userBuffet;
+  role: string = this.authService.userRole;
 
   onClickLogout():void{
     this.authService.logout();

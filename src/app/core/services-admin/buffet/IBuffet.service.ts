@@ -8,5 +8,6 @@ export interface IBuffetService {
   getBuffetByDateRange(start: string, end: string, page: number, size: number): import("rxjs").Observable<import("../../models/pageable.model").Page<import("../../models/buffet.model").Buffet>>;
   getBuffetsBySearchAndDate(search: string, start: string, end: string, page: number, size: number): import("rxjs").Observable<import("../../models/pageable.model").Page<import("../../models/buffet.model").Buffet>>;
   getTypeCasesByCode(userBuffet: string): Observable<string[]>;
+  getTypeOfTaskByBuffet(code: string): Observable<any>
 
 }

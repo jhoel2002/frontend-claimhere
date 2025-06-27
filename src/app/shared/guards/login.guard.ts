@@ -5,7 +5,7 @@ import {
   RouterStateSnapshot,
   UrlTree
 } from '@angular/router';
-import { AuthService } from '../../core/services-admin/auth/auth.service';
+import { AUTH_SERVICE_TOKEN } from '../../core/models/token-injection.model';
 
 /**
  * Evita el acceso a rutas protegidas si:
@@ -17,7 +17,7 @@ export const loginGuard = (
   state: RouterStateSnapshot
 ): boolean | UrlTree => {
   const router       = inject(Router);
-  const authService  = inject(AuthService);
+  const authService  = inject(AUTH_SERVICE_TOKEN);
 
   /* ---------- 1. token válido ---------- */
   if (!authService.isTokenValid()) {
@@ -27,21 +27,14 @@ export const loginGuard = (
   
   /* ---------- 2. buffet coincide ---------- */
   const buffetInUrl   = state.url.split('/')[1] ?? '';   // ej. "/XEV319/user"  → "XEV319"
-  const userBuffet    = authService.userBuffet;          // "XEV319" (fijo)
+  const userBuffet    = authService.userBuffet;  
+  
+  const userRole = authService.userRole;
 
-  if ((buffetInUrl && buffetInUrl !== userBuffet)) {
-    // Opcional: puedes redirigir al buffet correcto o negar acceso
-    return router.parseUrl(`/${userBuffet}/lawyer`);
-  }
+  const isBuffetRole = ['ROLE_COORDINATOR', 'ROLE_ADMINISTRATOR', 'ROLE_LAWYER'].includes(userRole);
 
-  const allowedRoles: string[] = ['ROLE_OTHERS','ROLE_LAWYER','ROLE_COORDINATOR','ROLE_LEGAL_ASSISTANT'];
-  const userRole      = authService.userRole;
-
-  if (allowedRoles && !allowedRoles.includes(userRole)) {
-    // Opción A: página 403
+  if (isBuffetRole && buffetInUrl !== userBuffet) {
     return router.parseUrl('/unauthorized');
-    // Opción B: redirigir a un módulo seguro:
-    // return router.parseUrl(`/${userBuffet}/lawyer`);
   }
 
   return true; // acceso permitido

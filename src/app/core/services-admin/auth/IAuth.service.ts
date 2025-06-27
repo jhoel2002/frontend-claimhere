@@ -16,6 +16,8 @@ export interface IAuthService {
 
     get userToken(): string;
 
+    get userCode(): string;
+
     get userLoginOn(): Observable<boolean>
 
 }

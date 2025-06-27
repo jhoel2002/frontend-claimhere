@@ -21,8 +21,6 @@ interface JwtPayload {
 })
 export class AuthService implements IAuthService {
 
-  private isBrowser: boolean;
-
   private http = inject(HttpClient);
 
   private static readonly TOKEN_KEY = 'token';
@@ -37,15 +35,12 @@ export class AuthService implements IAuthService {
 
   currentUserLoginOn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-    if (this.isBrowser) {
-      const token = localStorage.getItem(AuthService.TOKEN_KEY);
+  constructor() {
+    const token = localStorage.getItem(AuthService.TOKEN_KEY);
       if (token && !this.isExpired(token)) {
         const userData = this.decodeToken(token);
         this.currentUserData$.next({ ...userData, token, buffet: userData.buffet,  user: userData.user });
         this.currentUserLoginOn$.next(true);
-      }
     }
   }
   private decodeToken(token: string): { username: string; role: string; user: string; buffet: string } {
@@ -87,7 +82,6 @@ export class AuthService implements IAuthService {
   }
 
   logout(): void {
-    if (!this.isBrowser) return;
     localStorage.removeItem(AuthService.TOKEN_KEY);
     this.currentUserData$.next({ username: '', role: '', token: '', buffet: '', user: '' });
     this.currentUserLoginOn$.next(false);
@@ -106,8 +100,6 @@ export class AuthService implements IAuthService {
   }
   
   isTokenValid(): boolean {
-    if (!this.isBrowser) return false;
-
     const token = this.userToken || localStorage.getItem(AuthService.TOKEN_KEY);
     return token ? !this.isExpired(token) : false;
   }
@@ -127,14 +119,18 @@ export class AuthService implements IAuthService {
     return this.currentUserData$.value.token;
   }
 
-  // Obtener el token del usuario
+  // Obtener el buffet al que pertenece el usuario
   get userBuffet(): string {
     return this.currentUserData$.value.buffet;
   }
 
-  // Obtener el token del usuario
+  // Obtener el rol del usuario
   get userRole(): string {
     return this.currentUserData$.value.role;
+  }
+
+  get userCode(): string {
+    return this.currentUserData$.value.user;
   }
 
   // Manejo de errores

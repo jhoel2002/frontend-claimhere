@@ -1,10 +1,7 @@
 import { CommonModule, NgIf } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IRequestService } from '../../../core/services-admin/request/IRequest.service';
-import { debounceTime, finalize, Observable, of, startWith, switchMap, tap } from 'rxjs';
-import { CUSTOMER_SERVICE_TOKEN } from '../../../core/models/token-injection.model';
-import { log } from 'console';
+import { Component, ElementRef, HostListener, inject, Input} from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { finalize, Observable, of, startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-dropdown-customer',

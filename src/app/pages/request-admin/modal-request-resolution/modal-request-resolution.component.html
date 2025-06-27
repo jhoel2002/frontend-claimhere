@@ -1,0 +1,123 @@
+<div *ngIf="isOpen()" class="fixed inset-0 z-50 flex items-center justify-center">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" (click)="close()"></div>
+  
+  <!-- Modal -->
+  <div class="relative bg-white rounded-lg shadow-xl w-full max-w-4xl m-4 animate-modal-up p-8 space-y-6">
+    
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4 rounded-t-lg flex justify-between items-center">
+      <h2 class="text-xl font-semibold text-white">
+        {{ authService.userRole === 'ROLE_LAWYER' ? 'Subir resolucion del caso' : 'Visualizar resolucion del caso' }}: {{ request.code }}
+      </h2>
+      <button class="text-white hover:text-gray-200 transition-colors" (click)="close()">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Contenido del Modal -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-800">
+      <!-- Columna izquierda: Resumen del caso -->
+      <div class="space-y-3">
+        <h4 class="text-lg font-semibold text-gray-900 border-b pb-2">Resumen del Caso</h4>
+
+        <div>
+          <span class="font-medium">Título:</span>
+          <div class="text-gray-700">{{ request.title }}</div>
+        </div>
+
+        <div>
+          <span class="font-medium">Tipo de Caso:</span>
+          <div class="text-gray-700">{{ request.type_case }}</div>
+        </div>
+
+        <div>
+          <span class="font-medium">Estado de la Solicitud:</span>
+          <div class="text-gray-700">{{ request.status_request }}</div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: Más detalles + archivo -->
+      <div class="space-y-3">
+        <h4 class="text-lg font-semibold text-gray-900 border-b pb-2">Detalles Adicionales</h4>
+
+        <div>
+          <span class="font-medium">Cliente:</span>
+          <div class="text-gray-700">{{ request.customerName }}</div>
+        </div>
+
+        <div>
+          <span class="font-medium">Fecha de Creación:</span>
+          <div class="text-gray-700">{{ request.creation }}</div>
+        </div>
+
+        <div>
+          <span class="font-medium">Descripción:</span>
+          <div class="text-gray-700 whitespace-pre-line">{{ request.description }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador -->
+    <hr class="my-6 border-gray-300" />
+
+    <!-- Sección para subir resolución -->
+    <div *ngIf="authService.userRole === 'ROLE_LAWYER'" class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Subir archivo de resolución (.pdf)</label>
+      <input 
+        type="file" 
+        accept="application/pdf" 
+        (change)="onFileSelected($event)"
+        class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+      />
+    </div>
+
+    <div *ngIf="authService.userRole === 'ROLE_COORDINATOR'" class="space-y-2">
+      <h4 class="text-lg font-semibold text-gray-900 pb-2">Archivo de Resolución</h4>
+      <div *ngIf="request.resolution; else noResolution">
+        <app-file-card [showIcon]="true" [document]="request.resolution"></app-file-card>
+      </div>
+    </div>
+
+    <ng-template #noResolution>
+      <div class="text-lg font-semibold text-gray-800 mb-2">Aún no se ha subido una resolución para este caso.</div>
+    </ng-template>
+
+    <div *ngIf="!hasEnoughTasks() && authService.userRole === 'ROLE_LAWYER'" class="text-red-600 text-sm mt-2">
+      Este caso debe tener al menos 5 tareas antes de poder cargar la resolucion del caso.
+    </div>
+  
+    <!-- Footer -->
+    <div class="flex items-center justify-end gap-2">
+      <div class="flex justify-end gap-3 mt-6">
+        <button 
+          *ngIf="authService.userRole === 'ROLE_LAWYER'"
+          [disabled]="!hasEnoughTasks()" 
+          (click)="submitResolutionFile()"
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+          Enviar Resolucion
+        </button>
+        <button 
+          *ngIf="authService.userRole === 'ROLE_COORDINATOR'"
+          (click)="updateResolutionStatus('CLOSED')" 
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+          Cerrar caso
+        </button>
+        <button 
+          *ngIf="authService.userRole === 'ROLE_COORDINATOR'"
+          (click)="updateResolutionStatus('ARCHIVED')" 
+          class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
+          Archivar caso
+        </button>
+        <button 
+          (click)="close()" 
+          class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

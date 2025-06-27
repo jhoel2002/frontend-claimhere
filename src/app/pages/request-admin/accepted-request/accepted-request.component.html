@@ -1,5 +1,5 @@
 <app-entity-filter
-  [title]="'Solicitudes aprobadas'"
+  [title]="authService.userRole === 'ROLE_LAWYER' ? 'Casos asignados' : 'Casos aprobados'"
   [columns]="columns"
   [fetchFunction]="loadUsers"
   [entity]="entity"
@@ -9,3 +9,5 @@
 
 <app-modal-request-view [entity]="entity" (dataUpdated)="updateTable.onReload()" [requestService]="requestService"></app-modal-request-view>
 <app-modal-request-form (valueForm)="updateTable.onReload()" [requestService]="requestService" [modalService]="modalService"></app-modal-request-form>
+<app-modal-request-task [requestService]="requestService" [modalService]="modalService"></app-modal-request-task>
+<app-modal-request-resolution [requestService]="requestService" [modalService]="modalService"></app-modal-request-resolution>

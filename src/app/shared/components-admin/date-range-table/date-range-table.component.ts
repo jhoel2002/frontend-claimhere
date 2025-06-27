@@ -13,8 +13,7 @@ import { DateRangePicker } from 'flowbite-datepicker';
 })
 export class DateRangeTableComponent {
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-
+  constructor() {
   }
 
   startDate: string = '';
@@ -32,9 +31,7 @@ export class DateRangeTableComponent {
   private datepickerInstance!: DateRangePicker;
 
   ngAfterViewInit(): void {
-
-    if (isPlatformBrowser(this.platformId)) {
-      const options: DatepickerOptions = {
+    const options: DatepickerOptions = {
         defaultDatepickerId: null,
         autohide: true,
         format: 'dd/mm/yyyy',
@@ -45,9 +42,11 @@ export class DateRangeTableComponent {
         title: null,
         rangePicker: true,
       };
+    this.datepickerInstance = new DateRangePicker( this.dateRangePicker.nativeElement, options);
+  }
 
-      this.datepickerInstance = new DateRangePicker( this.dateRangePicker.nativeElement, options);
-    }
+  ngOnDestroy(): void {
+    this.datepickerInstance?.destroy?.();
   }
 
   applyDateRange() {
@@ -68,6 +67,7 @@ export class DateRangeTableComponent {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   }
+
   clearDateRange() {
     this.startDate = '';
     this.endDate = '';

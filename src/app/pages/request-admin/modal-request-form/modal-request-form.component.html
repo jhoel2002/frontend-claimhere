@@ -85,15 +85,23 @@
 
           <!-- Evidencia -->
           <div class="form-group">
-            <label class="text-sm font-medium text-gray-800">Evidencias:</label>
-            <input type="file" (change)="onEvidencesSelected($event)" multiple class="mt-1 block w-full p-2 text-sm text-gray-600">
+            <label class="block mb-2 text-sm font-medium text-gray-900 " for="file_input">Evidencias:</label>
+            <input (change)="onEvidencesSelected($event)" multiple 
+              class="block w-full text-sm text-gray-900 border rounded-lg cursor-pointer bg-white focus:outline-none" 
+              accept=".pdf,.png,.jpg,.jpeg"
+              aria-describedby="file_input_help" id="file_input" type="file">
+            <p class="mt-1 text-sm text-gray-500" id="file_input_help">PDF, PNG, JPG, JPEG (MAX. 800x400px).</p>
             <div *ngIf="uploadError" class="text-red-600 text-xs">{{ uploadError }}</div>
-          </div>
+          </div> 
 
           <!-- Cotización -->
           <div class="form-group">
-            <label class="text-sm font-medium text-gray-800">Cotización:</label>
-            <input type="file" (change)="onCotizationSelected($event)" class="mt-1 block w-full p-2 text-sm text-gray-600">
+            <label class="block mb-2 text-sm font-medium text-gray-900 " for="file_input">Cotizacion:</label>
+            <input (change)="onCotizationSelected($event)" 
+              class="block w-full text-sm text-gray-900 border rounded-lg cursor-pointer bg-white focus:outline-none" 
+              accept=".docx,.xlsx,.pdf"
+              aria-describedby="file_input_help" id="file_input" type="file">
+            <p class="mt-1 text-sm text-gray-500" id="file_input_help">EXCEL, WORD, PDF.</p>
             <div *ngIf="uploadError" class="text-red-600 text-xs">{{ uploadError }}</div>
           </div>
         </div>
@@ -107,3 +115,4 @@
     </div>
   </div>
 </div>
+

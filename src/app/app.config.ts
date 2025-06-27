@@ -10,7 +10,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { environment } from '../environments/environment';
 import { UserSimulationService } from './core/services-admin/user/user-simulation.service';
 import { UserService } from './core/services-admin/user/user.service';
-import { AUTH_SERVICE_TOKEN, BUFFET_SERVICE_TOKEN, CUSTOMER_SERVICE_TOKEN, DOCUMENT_SERVICE_TOKEN, LAWYER_SERVICE_TOKEN, REQUEST_SERVICE_TOKEN, USER_SERVICE_TOKEN } from './core/models/token-injection.model';
+import { AUTH_SERVICE_TOKEN, BUFFET_SERVICE_TOKEN, CUSTOMER_SERVICE_TOKEN, DASHBOARD_SERVICE_TOKEN, DOCUMENT_SERVICE_TOKEN, LAWYER_SERVICE_TOKEN, REQUEST_SERVICE_TOKEN, USER_SERVICE_TOKEN } from './core/models/token-injection.model';
 import { CustomerService } from './core/services-admin/customer/customer.service';
 import { CustomerSimulationService } from './core/services-admin/customer/customer-simulation.service';
 import { RequestSimulationService } from './core/services-admin/request/request-simulation.service';
@@ -23,6 +23,8 @@ import { AuthSimulationService } from './core/services-admin/auth/auth-simulatio
 import { AuthService } from './core/services-admin/auth/auth.service';
 import { BuffetSimulationService } from './core/services-admin/buffet/buffet-simulation.service';
 import { BuffetService } from './core/services-admin/buffet/buffet.service';
+import { DashboardBuffetSimulationService } from './core/services-admin/dashboard-buffet/dashboard-buffet-simulation.service';
+import { DashboardBuffetService } from './core/services-admin/dashboard-buffet/dashboard-buffet.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -59,5 +61,9 @@ export const appConfig: ApplicationConfig = {
       provide: BUFFET_SERVICE_TOKEN,
       useClass: environment.useMock ? BuffetSimulationService : BuffetService
     },
+    {
+      provide: DASHBOARD_SERVICE_TOKEN,
+      useClass: environment.useMock ? DashboardBuffetSimulationService : DashboardBuffetService
+    }
   ]
 };

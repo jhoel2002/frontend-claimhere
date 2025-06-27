@@ -1,86 +1,211 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable} from '@angular/core';
+import { BehaviorSubject, delay, Observable, of, throwError } from 'rxjs';
 import { AuthResponse } from '../../models/auth-response.model';
 import { AuthData } from '../../models/auth-data.model';
 import { IAuthService } from './IAuth.service';
-import { isPlatformBrowser } from '@angular/common';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  sub: string;
+  authorities: string;
+  exp: number;
+  buffet: string;
+  user: string;
+}
+
+const MOCK_USERS: Array<{
+  email: string;
+  password: string;
+  role: string;
+  buffet: string;
+  user: string;
+  }> = [
+    {
+      email: 'admin@gmail.com',
+      password: '12345',
+      role: 'ROLE_ADMINISTRATOR',
+      buffet: 'CENTRAL',
+      user: 'zxcv',
+    },
+    {
+      email: 'coordinador@gmail.com',
+      password: '12345',
+      role: 'ROLE_COORDINATOR',
+      buffet: 'NORTE',
+      user: 'asda',
+    },
+    {
+      email: 'lawyer@gmail.com',
+      password: '12345',
+      role: 'ROLE_LAWYER',
+      buffet: 'NORTE',
+      user: 'qweq',
+    },
+    {
+      email: '  ',
+      password: '12345',
+      role: 'ROLE_LEGALCODE',
+      buffet: 'XXXX',
+      user: 'qweq',
+    }
+  ];
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthSimulationService implements IAuthService {
 
-  private static expirationTimeInSeconds: number = 1440; // 24 minutos
-  private mockUser: AuthResponse = {
-    token: 'mock-token-ergfadsgeasgeargaergergqreg',
-    username: 'usuario.simulado',
-    role: 'ROLE_ADMIN',
-    buffet: 'BuffetSimulado',
-    user: 'FGDSFGEFGER'
-  };
+  private static readonly TOKEN_KEY = 'token';
 
-  private currentUserData: BehaviorSubject<AuthResponse> = new BehaviorSubject<AuthResponse>(this.mockUser);
-  private currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  private currentUserData$ = new BehaviorSubject<AuthResponse>({
+    username: '',
+    role: '',
+    token: '',
+    buffet: '',
+    user: '',
+  });
+  private currentUserLoginOn$ = new BehaviorSubject<boolean>(false);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-  
-  get userRole(): string {
-    throw new Error('Method not implemented.');
+  constructor() {
+    const token = localStorage.getItem(AuthSimulationService.TOKEN_KEY);
+    if (token && !this.isExpired(token)) {
+      const userData = this.decodeToken(token);
+      this.currentUserData$.next({ ...userData, token });
+      this.currentUserLoginOn$.next(true);
+    }
   }
 
+  /** Simula el inicio de sesión contra usuarios locales. */
   login(credentials: AuthData): Observable<AuthResponse> {
-    if (isPlatformBrowser(this.platformId)) {
-      const expirationDate = Date.now() + AuthSimulationService.expirationTimeInSeconds * 1000;
-      localStorage.setItem("token", this.mockUser.token);
-      localStorage.setItem("user", JSON.stringify(this.mockUser));
-      localStorage.setItem("expiration", JSON.stringify({ expDate: expirationDate }));
+    const { email, password } = credentials;
+    const matched = MOCK_USERS.find(
+      (u) => u.email === email && u.password === password,
+    );
+
+    if (!matched) {
+      return throwError(() => 'Credenciales incorrectas.').pipe(delay(600));
     }
-    this.currentUserData.next(this.mockUser);
-    this.currentUserLoginOn.next(true);
-    return new BehaviorSubject<AuthResponse>(this.mockUser).asObservable();
+
+    const token = this.generateMockToken(matched);
+
+    // Persistencia local para que sobreviva al refresh
+    localStorage.setItem(AuthSimulationService.TOKEN_KEY, token);
+
+    // Actualiza los observers
+    const userData = this.decodeToken(token);
+    this.currentUserData$.next({ ...userData, token });
+    this.currentUserLoginOn$.next(true);
+
+    // Emula latencia de red (500 ms) y devuelve la respuesta
+    return of({ ...userData, token }).pipe(delay(500));
   }
 
+  /** Cierra sesión y limpia almacenamiento. */
   logout(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem("expiration");
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-    }
-
-    this.currentUserLoginOn.next(false);
-    this.currentUserData.next({
-      token: '',
-      username: '',
-      role: '',
-      buffet: '',
-      user: ''
-    });
+    localStorage.removeItem(AuthSimulationService.TOKEN_KEY);
+    this.currentUserData$.next({ username: '', role: '', token: '', buffet: '', user: '' });
+    this.currentUserLoginOn$.next(false);
   }
 
-  isTokenValid(): boolean {
-    if (!isPlatformBrowser(this.platformId)) return false;
-    const item = localStorage.getItem("expiration");
-    if (item) {
-      const expiration = JSON.parse(item).expDate;
-      return expiration > Date.now();
+  /** Comprueba si el token está expirado. */
+  private isExpired(token: string): boolean {
+    try {
+      const { exp } = jwtDecode<JwtPayload>(token);
+      if (typeof exp !== 'number') {
+        return true;
+      }
+      return Date.now() / 1000 >= exp;
+    } catch {
+      return true;
     }
-    return false;
   }
 
-  get userData(): Observable<AuthResponse> {
-    return this.currentUserData.asObservable();
+  /** Genera un JWT falso (base64 sin firma real). */
+  private generateMockToken(user: {
+    email: string;
+    role: string;
+    buffet: string;
+    user: string;
+  }): string {
+    const header = {
+      alg: 'HS256',
+      typ: 'JWT',
+    };
+
+    const payload: JwtPayload & {
+      authorities: string;
+      buffet: string;
+      user: string;
+    } = {
+      sub: user.email,
+      authorities: JSON.stringify([{ authority: user.role }]),
+      buffet: user.buffet,
+      user: user.user,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60, // 1 h
+    };
+
+    const base64 = (obj: object) => btoa(JSON.stringify(obj));
+    return `${base64(header)}.${base64(payload)}.MOCKSIG`;
+  }
+
+  /** Extrae los datos del token para exponerlos a la aplicación. */
+  private decodeToken(token: string): {
+    username: string;
+    role: string;
+    buffet: string;
+    user: string;
+  } {
+    const payload = jwtDecode<JwtPayload & { authorities: string; buffet: string; user: string }>(token);
+    let role = '';
+    let buffet = '';
+    let user = '';
+    try {
+      const authoritiesArray = JSON.parse(payload.authorities) as { authority: string }[];
+      role = authoritiesArray?.[0]?.authority || '';
+      buffet = payload.buffet || '';
+      user = payload.user || '';
+    } catch (error) {
+      console.warn('No se pudo parsear authorities del token:', error);
+    }
+    return {
+      username: payload.sub || '',
+      role,
+      buffet,
+      user,
+    };
+  }
+
+  // === Getters públicos para imitar la API del AuthService real ===
+
+  get userData$(): Observable<AuthResponse> {
+    return this.currentUserData$.asObservable();
   }
 
   get userLoginOn(): Observable<boolean> {
-    return this.currentUserLoginOn.asObservable();
+    return this.currentUserLoginOn$.asObservable();
   }
 
   get userToken(): string {
-    return this.currentUserData.value.token;
+    return this.currentUserData$.value.token;
   }
 
   get userBuffet(): string {
-    return this.currentUserData.value.buffet;
+    return this.currentUserData$.value.buffet;
+  }
+
+  get userRole(): string {
+    return this.currentUserData$.value.role;
+  }
+
+  get userCode(): string {
+    return this.currentUserData$.value.user;
+  }
+
+  /** Versión simplificada de isTokenValid para el modo mock. */
+  isTokenValid(): boolean {
+    const token = this.userToken;
+    return token ? !this.isExpired(token) : false;
   }
 
 }

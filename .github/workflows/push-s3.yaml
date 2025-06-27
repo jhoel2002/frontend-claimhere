@@ -43,4 +43,4 @@ jobs:
 
       - name: Subir archivos a S3
         run: |
-          aws s3 sync dist/claimhere-front/browser/ ${{ secrets.AWS_SECRET_S3_DEV }} --delete
+          aws s3 sync dist/legalcode-fron-admin/browser/ ${{ secrets.AWS_SECRET_S3_DEV }} --delete

@@ -46,7 +46,21 @@ export class LoginComponent {
     this.authService.login(credentials).subscribe({
       next: () => {
         const buffet = this.authService.userBuffet;
-        this.router.navigate([`/${buffet}/request/pending`]);
+        const role = this.authService.userRole;
+        let path = '';
+
+        if (role === 'ROLE_LAWYER') {
+          path = 'request/accepted';
+        } else if (role === 'ROLE_COORDINATOR') {
+          path = 'request/pending';
+        } else if (role === 'ROLE_ADMINISTRATOR') {
+          path = 'dashboard';
+        } else if (role === 'ROLE_LEGALCODE') {
+          this.router.navigate([`/admin/buffet`]);
+          return;
+        }
+
+        this.router.navigate([`/${buffet}/${path}`]);
       },
       error: (error) => {
         this.errorMessage = error;

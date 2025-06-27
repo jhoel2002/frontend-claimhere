@@ -34,7 +34,7 @@ export class ModalLawyerFormComponent{
 
   private subscription = new Subscription();
 
-  modalPayload: { mode: 'create' | 'edit' | 'view', data: Lawyer | null} | null = null;
+  modalPayload: { mode: 'create' | 'edit' | 'view' | 'task' | 'resolution', data: Lawyer | null} | null = null;
 
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);

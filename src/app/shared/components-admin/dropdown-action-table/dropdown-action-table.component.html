@@ -8,15 +8,34 @@
     </button>
 
     <div *ngIf="dropdownOpen"
-      class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5">
+      class="absolute right-0 z-10 mt-2 w-[170px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5">
       <div class="py-1">
         <ng-container *ngIf="entity === 'request-pending' || entity === 'request-rejected' || entity === 'request-approved'">
           <a (click)="onViewRequest()"
             class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer">
-            Visualizar
+            Visualizar Caso
           </a>
         </ng-container>
-
+        <ng-container *ngIf="entity === 'request-approved'">
+          <a (click)="onTaskRequest()"
+            class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer">
+            <ng-container [ngSwitch]="authService.userRole">
+              <ng-container *ngSwitchCase="'ROLE_LAWYER'">Agregar Tarea</ng-container>
+              <ng-container *ngSwitchCase="'ROLE_COORDINATOR'">Visualizar Tareas</ng-container>
+              <ng-container *ngSwitchDefault>Acceder</ng-container>
+            </ng-container>
+          </a>
+        </ng-container>
+        <ng-container *ngIf="entity === 'request-approved'">
+          <a (click)="onResolutionRequest()"
+            class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer">
+            <ng-container [ngSwitch]="authService.userRole">
+              <ng-container *ngSwitchCase="'ROLE_LAWYER'">Cargar Resolución</ng-container>
+              <ng-container *ngSwitchCase="'ROLE_COORDINATOR'">Visualizar Resolución</ng-container>
+              <ng-container *ngSwitchDefault>Acceder</ng-container>
+            </ng-container>
+          </a>
+        </ng-container>
         <ng-container *ngIf="entity !== 'request-pending' && entity !== 'request-rejected' && entity !== 'request-approved'">
           <a (click)="onEditItem()"
             class="block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer">

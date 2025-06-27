@@ -20,7 +20,7 @@ export class ModalRequestFormComponent implements OnInit {
 
   @Output() valueForm = new EventEmitter();
 
-  modalPayload: { mode: 'create' | 'edit' | 'view', data: any | null} | null = null;
+  modalPayload: { mode: 'create' | 'edit' | 'view' | 'task' | 'resolution', data: any | null} | null = null;
 
   caseTypes: string[] = [];
 
@@ -40,8 +40,6 @@ export class ModalRequestFormComponent implements OnInit {
   fb = inject(FormBuilder);
   
   uploadError: string | null = null;
-
-  evidences!: document[];
 
   form!: FormGroup;
 

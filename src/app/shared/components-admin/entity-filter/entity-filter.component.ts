@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { DataTableColumn } from '../../../core/models/datatable-column.model';
 import { Observable } from 'rxjs';
 import { Page } from '../../../core/models/pageable.model';
@@ -8,6 +8,7 @@ import { SearchTableComponent } from '../search-table/search-table.component';
 import { PaginationTableComponent } from '../pagination-table/pagination-table.component';
 import { ModalEntityType } from '../../../core/models/modal-entity-type';
 import { NgIf } from '@angular/common';
+import { AUTH_SERVICE_TOKEN } from '../../../core/models/token-injection.model';
 
 @Component({
   selector: 'app-entity-filter',
@@ -21,6 +22,8 @@ export class EntityFilterComponent<T> implements OnInit {
   @Input() title: string = '';
   @Input() columns: DataTableColumn[] = [];
   @Input() entity!: ModalEntityType;
+
+  authService = inject(AUTH_SERVICE_TOKEN);
   
   isDisabled: boolean = false;
 

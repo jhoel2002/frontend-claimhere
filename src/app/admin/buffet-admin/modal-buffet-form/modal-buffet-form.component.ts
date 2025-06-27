@@ -25,7 +25,7 @@ export class ModalBuffetFormComponent {
   
   private subscription = new Subscription();
 
-  modalPayload: { mode: 'create' | 'edit' | 'view', data: Buffet | null} | null = null;
+  modalPayload: { mode: 'create' | 'edit' | 'view' | 'task' | 'resolution', data: Buffet | null} | null = null;
 
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);

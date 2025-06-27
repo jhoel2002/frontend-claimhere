@@ -25,19 +25,20 @@
                         id="checkbox-table-search-{{ i }}"
                         type="checkbox"
                         [checked]="row.enabled"
-                        [disabled]="true"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 not-even:focus:ring-2"/>
+                        class="w-4 h-4 bg-blue-700 border-gray-300 rounded-sm pointer-events-none cursor-not-allowed "/>
                         <label for="checkbox-table-search-{{ i }}" class="sr-only">checkbox</label>
                     </div>
                 </td>
                 <td class="px-6 py-4">
                     {{ row[column.dataKey] }}
                 </td> 
-                <td *ngIf="i === columns.length - 1" >
+                <td class="px-6 py-4" *ngIf="i === columns.length - 1" >
                     <app-dropdown-action-table
                         [row]="rowIndex"
                         [entity]="entity"
-                        (viewRequest)="viewRequest(row.code)"
+                        (viewRequest)="viewRequest(row)"
+                        (taskRequest)="taskRequest(row)"
+                        (resolutionRequest)="resolutionRequest(row)"
                         (editItem)="editItem(row)"
                         (deleteItem)="deleteItem(row)"
                         [isEnabled]="row.enabled"

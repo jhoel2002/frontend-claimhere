@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ModalEntityType } from '../../../core/models/modal-entity-type';
+import { AUTH_SERVICE_TOKEN } from '../../../core/models/token-injection.model';
 
 @Component({
   selector: 'app-dropdown-action-table',
@@ -15,7 +16,11 @@ export class DropdownActionTableComponent {
   @Input() row!: any;
   @Input() isEnabled!: boolean;
 
+  authService = inject(AUTH_SERVICE_TOKEN);
+
   @Output() viewRequest = new EventEmitter<any>();
+  @Output() taskRequest = new EventEmitter<any>();
+  @Output() resolutionRequest = new EventEmitter<any>();
   @Output() editItem = new EventEmitter<any>();
   @Output() deleteItem = new EventEmitter<any>();
   @Output() disableItem = new EventEmitter<any>();
@@ -37,6 +42,16 @@ export class DropdownActionTableComponent {
 
   onViewRequest() {
     this.viewRequest.emit();
+    this.dropdownOpen = false;
+  }
+
+  onTaskRequest() {
+    this.taskRequest.emit();
+    this.dropdownOpen = false;
+  }
+
+  onResolutionRequest() {
+    this.resolutionRequest.emit();
     this.dropdownOpen = false;
   }
 

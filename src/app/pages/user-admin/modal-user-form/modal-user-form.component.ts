@@ -32,7 +32,7 @@ export class ModalUserFormComponent implements OnInit {
 
   private subscription = new Subscription();
 
-  modalPayload: { mode: 'create' | 'edit' | 'view', data: User | null } | null = null;
+  modalPayload: { mode: 'create' | 'edit' | 'view' | 'task' | 'resolution', data: User | null } | null = null;
 
   private fb = inject(FormBuilder);
   private alertService = inject(AlertService);

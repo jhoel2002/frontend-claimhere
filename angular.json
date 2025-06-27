@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "claimhere-front": {
+    "legalcode-fron-admin": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,8 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "baseHref": "/",
-            "outputPath": "dist/claimhere-front",
+            "outputPath": "dist/legalcode-fron-admin",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -26,19 +25,11 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/flowbite/dist/flowbite.min.css",
-              "node_modules/ngx-spinner/animations/ball-scale-ripple.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/ngx-spinner/animations/ball-scale-ripple.css"
             ],
             "scripts": [
-              "node_modules/flowbite/dist/flowbite.min.js",
-              "node_modules/flowbite-datepicker/dist/js/datepicker.min.js"
-            ],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            ]
           },
           "configurations": {
             "production": {
@@ -51,8 +42,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -74,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "claimhere-front:build:production"
+              "buildTarget": "legalcode-fron-admin:build:production"
             },
             "development": {
-              "buildTarget": "claimhere-front:build:development"
+              "buildTarget": "legalcode-fron-admin:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -85,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "claimhere-front:build"
+            "buildTarget": "legalcode-fron-admin:build"
           }
         },
         "test": {
@@ -103,14 +94,10 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [
-            ]
+            "scripts": []
           }
         }
       }
     }
-  },
-  "cli": {
-    "analytics": "c525b463-e6a6-467f-bf22-b70d1c99b5fe"
   }
 }

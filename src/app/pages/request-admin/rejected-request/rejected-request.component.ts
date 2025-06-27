@@ -28,9 +28,8 @@ export class RejectedRequestComponent {
   columns: DataTableColumn[] = [
     { label: 'Codigo', dataKey: 'code' },
     { label: 'Título del Caso', dataKey: 'title' },
-    { label: 'Descripcion', dataKey: 'description' },
     { label: 'Tipo de Caso', dataKey: 'type_case' },
-    { label: 'Cliente', dataKey: 'customer' },
+    { label: 'Cliente', dataKey: 'customerName' },
     { label: 'Fecha de Creacion', dataKey: 'creation' }
   ];
 

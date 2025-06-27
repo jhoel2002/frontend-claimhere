@@ -7,7 +7,7 @@ import { ModalEntityType } from '../../models/modal-entity-type';
 })
 export class ModalService {
   private modalData = new BehaviorSubject<{
-    mode: 'create' | 'edit' | 'view',
+    mode: 'create' | 'edit' | 'view' | 'task' | 'resolution',
     data: any | null,
     entity: ModalEntityType
   } | null>(null);
@@ -24,8 +24,16 @@ export class ModalService {
     this.modalData.next({ mode: 'view', data, entity });
   }
 
+  openModalTask(data: any, entity: ModalEntityType) {
+    this.modalData.next({ mode: 'task', data, entity });
+  }
+
+  openModalResolution(data: any, entity: ModalEntityType) {
+    this.modalData.next({ mode: 'resolution', data, entity });
+  }
+
   getModalData(): Observable<{
-    mode: 'create' | 'edit' | 'view',
+    mode: 'create' | 'edit' | 'view' | 'task' | 'resolution',
     data: any | null,
     entity: ModalEntityType
   } | null> {

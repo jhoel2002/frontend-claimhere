@@ -10,8 +10,5 @@ import { SideBarComponent } from '../shared/components-admin/side-bar/side-bar.c
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  isCollapsed = false;
-  onClickToggler(_: any) {
-    this.isCollapsed = !this.isCollapsed;
-  }
+
 }

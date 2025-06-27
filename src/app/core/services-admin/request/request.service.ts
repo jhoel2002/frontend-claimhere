@@ -6,9 +6,10 @@ import { nameEndpints } from '../../name-enpoints/name-endpoints';
 import { Page } from '../../models/pageable.model';
 import { IRequestService } from './IRequest.service';
 import { CaseRequest } from '../../models/case-request.model';
-import { CaseRequestFull } from '../../models/case-request-full.model';
-import { document } from '../../models/document.model';
+// import { CaseRequestFull } from '../../models/case-request-full.model';
 import { AUTH_SERVICE_TOKEN } from '../../models/token-injection.model';
+import { Task } from '../../models/task.model';
+import { document } from '../../models/document.model';
 type Status = 'APPROVED' | 'REJECTED' | 'PENDING';
 
 @Injectable({
@@ -51,9 +52,14 @@ export class RequestService implements IRequestService {
     return this.http.patch(url, body).pipe(catchError(this.handleError));
   }
 
-  getRequestByCode(code: string): Observable<CaseRequestFull> {
+  getRequestByCode(code: string): Observable<CaseRequest> {
     const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/info/${code}`;
-    return this.http.get<CaseRequestFull>(url).pipe(catchError(this.handleError));
+    return this.http.get<CaseRequest>(url).pipe(catchError(this.handleError));
+  }
+
+  getRequestView(code: string): Observable<Partial<CaseRequest>>{
+    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/info/${code}`;
+    return this.http.get<Partial<CaseRequest>>(url).pipe(catchError(this.handleError));
   }
 
   getAll(page: number, size: number): Observable<Page<CaseRequest>> {
@@ -65,43 +71,44 @@ export class RequestService implements IRequestService {
     return this.http.get<Page<CaseRequest>>(url, { params }).pipe(catchError(this.handleError));
   }
 
-  getRequestsByStatus(page: number, size: number, status: Status): Observable<Page<CaseRequest>> {
+  getRequestsByStatus(page: number, size: number, status: Status, lawyerCode?: string): Observable<Page<CaseRequest>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'asc')
-      .set('status', status);
+      .set('status', status)
+      .set('lawyer', lawyerCode || '');
     const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/listFilterStatus/${this.codebuffet}`;
     return this.http.get<Page<CaseRequest>>(url, { params }).pipe(catchError(this.handleError));
   }
 
-  getRequestsBySearch(searchText: string, page: number, size: number, status: Status): Observable<Page<CaseRequest>> {
+  getRequestsBySearch(searchText: string, page: number, size: number, status: Status, lawyerCode?: string): Observable<Page<CaseRequest>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'asc')
       .set('search', searchText)
-      .set('status', status);
-      
+      .set('status', status)
+      .set('lawyer', lawyerCode || '');
     const url: string = `${environment.baseUrl}${nameEndpints.requestEndpoint}/listFilterSearch/${this.codebuffet}`;
-    
     return this.http.get<Page<CaseRequest>>(url, { params })
       .pipe(catchError(this.handleError));
   }
 
-  getRequestsByDateRange(start: string, end: string, page: number, size: number, status: Status): Observable<Page<CaseRequest>> {
+  getRequestsByDateRange(start: string, end: string, page: number, size: number, status: Status, lawyerCode?: string): Observable<Page<CaseRequest>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
       .set('sort', 'asc')
       .set('startDate', start)
       .set('endDate', end)
-      .set('status', status);
+      .set('status', status)
+      .set('lawyer', lawyerCode || '');
     const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/listFilterApplicationDate/${this.codebuffet}`;
     return this.http.get<Page<CaseRequest>>(url, { params }).pipe(catchError(this.handleError));
   }
 
-  getRequestsBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number, status: Status): Observable<Page<CaseRequest>> {
+  getRequestsBySearchAndDate(searchText: string, start: string, end: string, page: number, size: number, status: Status, lawyerCode?: string): Observable<Page<CaseRequest>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString())
@@ -109,7 +116,8 @@ export class RequestService implements IRequestService {
       .set('search', searchText)
       .set('startDate', start)
       .set('endDate', end)
-      .set('status', status);
+      .set('status', status)
+      .set('lawyer', lawyerCode || '');
     const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/listFilterFull/${this.codebuffet}`;
     return this.http.get<Page<CaseRequest>>(url, { params }).pipe(catchError(this.handleError));
   }
@@ -119,7 +127,7 @@ export class RequestService implements IRequestService {
 
     // Campos de texto
     formData.append('title', requestData.title);
-    formData.append('description', requestData.description);
+    formData.append('description', requestData.description!);
     formData.append('type_case', requestData.type_case);
     formData.append('lawyer', codeLawyer);
 
@@ -127,9 +135,37 @@ export class RequestService implements IRequestService {
     formData.append('cotizacion', cotizacion);
 
     // Construir URL con codeCustomer
-    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/saveEvidenceMassiveQuotation/${codeCustomer}`;
+    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/saveEvidenceMassive/${codeCustomer}`;
 
     return this.http.post<any>(url, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  registerResolution(code: string, resolution: document): Observable<any> {
+    const formData = new FormData();
+    if (resolution.document && resolution.type_document) {
+      formData.append('files', resolution.document);
+      formData.append('typeDocument', resolution.type_document);
+      formData.append('codeCaseRequest', code);
+    }
+    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/saveResolution`;
+
+    return this.http.post<any>(url, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  getTasksByRequestCode(code: string): Observable<any> {
+    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/getTaskByRequest/${code}`;
+    return this.http.get<any>(url).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  addTaskToRequest(code: string, newTask: Task): Observable<any> {
+    const url = `${environment.baseUrl}${nameEndpints.requestEndpoint}/addTaskToRequest/${code}`;
+    return this.http.post<any>(url,newTask).pipe(
       catchError(this.handleError)
     );
   }

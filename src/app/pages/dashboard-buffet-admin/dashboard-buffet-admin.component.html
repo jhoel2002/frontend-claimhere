@@ -1,0 +1,153 @@
+<div>
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-3xl text-gray-700 font-bold">Dashboard</h2>
+  </div>
+    <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg mt-14">
+      <div class="grid grid-cols-1 mb-4">
+         <div class="flex items-center justify-center">
+            <ngx-charts-number-card [results]="casesForMonth" [scheme]="colorScheme" [cardColor]="'#232837'" ></ngx-charts-number-card>
+         </div>
+      </div>
+      <div class="grid grid-cols-1 mb-4">
+         <div class="flex items-center justify-center">
+            <ngx-charts-number-card [results]="casesByStatus" [scheme]="colorScheme" [cardColor]="'#232837'" ></ngx-charts-number-card>
+         </div>
+      </div>
+      <div class="grid grid-cols-1 mb-4">
+         <div class="flex items-center justify-center">
+            <ngx-charts-number-card [results]="casesMetrics" [scheme]="colorScheme" [cardColor]="'#232837'" ></ngx-charts-number-card>
+         </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-4 h-80">
+         <div class="flex col-span-1 items-center justify-center rounded-sm bg-gray-50">
+            <!-- <h3 class="text-center text-lg font-semibold mb-2">Casos por Abogado</h3> -->
+            <ngx-charts-bar-vertical
+              [results]="casesByLawyer"
+              [scheme]="colorScheme"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="false"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [xAxisLabel]="'Abogados'"
+              [yAxisLabel]="'Cantidad de casos asignados'">
+            </ngx-charts-bar-vertical>
+         </div>
+         <div class="flex col-span-1 items-center justify-center rounded-sm bg-gray-50">
+            <!-- <h3 class="text-center text-lg font-semibold mb-2">Distribución por Tipo de Caso</h3> -->
+            <ngx-charts-pie-chart
+               [scheme]="colorScheme"
+               [results]="casesByTypeCase"
+               [legend]="true">
+            </ngx-charts-pie-chart>
+         </div>
+      </div>
+      <div class="grid grid-cols-12 gap-4 mb-4 h-80">
+         <div class="flex col-span-6 items-center justify-center rounded-sm bg-gray-50">
+            <ngx-charts-bar-horizontal
+               [results]="avgResolutionTimeByLawyer"
+               [scheme]="colorScheme"
+               [showXAxisLabel]="true"
+               [showYAxisLabel]="true"
+               [xAxis]="true"
+               [yAxis]="true"
+               [xAxisLabel]="'Días promedio'"
+               [yAxisLabel]="'Abogado/a'"
+               [roundEdges]="true"
+               [tooltipDisabled]="false">
+            </ngx-charts-bar-horizontal>
+         </div>
+         <div class="flex col-span-6 items-center justify-center rounded-sm bg-gray-50">
+            <ngx-charts-advanced-pie-chart
+               [scheme]="colorScheme"
+               [results]="avgStageTime"
+               >
+            </ngx-charts-advanced-pie-chart>
+         </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-4 h-80">
+         <div class="flex items-center justify-center rounded-sm bg-gray-50">
+            <ngx-charts-bar-vertical-2d
+               [results]="performanceByLawyer"
+               [scheme]="colorScheme"
+               [showXAxisLabel]="true"
+               [showYAxisLabel]="true"
+               [xAxis]="true"
+               [yAxis]="true"
+               [legend]="true"
+               [xAxisLabel]="'Cantidad de casos Resueltos vs. No resueltos'"
+               [yAxisLabel]="'Abogado/a'"
+               [roundEdges]="true">
+            </ngx-charts-bar-vertical-2d>
+         </div>
+         <div class="flex items-center justify-center rounded-sm bg-gray-50">
+            <ngx-charts-bar-horizontal
+            [results]="satisfactionByLawyer"
+            [scheme]="colorScheme"
+            [showXAxisLabel]="true"
+            [showYAxisLabel]="true"
+            [xAxis]="true"
+            [yAxis]="true"
+            [xAxisLabel]="'Puntuación (0–5)'"
+            [yAxisLabel]="'Abogado/a'"
+            [xScaleMin]="0"
+            [xScaleMax]="5"
+            [roundEdges]="true"
+            [animations]="true"
+            [tooltipDisabled]="false">
+            </ngx-charts-bar-horizontal>
+         </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-4 h-80">
+         <div class="flex items-center justify-center rounded-sm bg-gray-50">
+            <ngx-charts-line-chart
+               [results]="monthlyIncome"
+               [scheme]="colorScheme"
+               [showXAxisLabel]="true"
+               [showYAxisLabel]="true"
+               [xAxis]="true"
+               [yAxis]="true"
+               [xAxisLabel]="'Mes'"
+               [yAxisLabel]="'Ingresos (S/.)'"
+               [autoScale]="true"
+               [roundDomains]="true"
+               [timeline]="false">
+            </ngx-charts-line-chart>
+         </div>
+         <div class="flex items-center justify-center rounded-sm bg-gray-50">
+            <ngx-charts-line-chart
+               [results]="monthlyEvolution"
+               [scheme]="colorScheme"
+               [showXAxisLabel]="true"
+               [showYAxisLabel]="true"
+               [xAxis]="true"
+               [yAxis]="true"
+               [xAxisLabel]="'Mes'"
+               [yAxisLabel]="'Cantidad de casos'"
+               [legend]="true"
+               [autoScale]="true"
+               [roundDomains]="true"
+               [timeline]="false">
+            </ngx-charts-line-chart> 
+         </div>
+      </div>
+      <div class="grid grid-cols-1 gap-4 h-80">
+         <div class="flex items-center justify-center rounded-sm bg-gray-50">
+            <ngx-charts-line-chart
+               [scheme]="colorScheme"
+               [results]="monthlyLawyer"
+               [xAxis]="true"
+               [yAxis]="true"
+               [legend]="true"
+               [showXAxisLabel]="true"
+               [showYAxisLabel]="true"
+               [xAxisLabel]="'Mes'"
+               [yAxisLabel]="'Cantidad de casos asignados'"
+               [autoScale]="true"
+               [roundDomains]="true"
+               [timeline]="false">
+            </ngx-charts-line-chart>
+         </div>
+      </div>
+   </div>
+</div>

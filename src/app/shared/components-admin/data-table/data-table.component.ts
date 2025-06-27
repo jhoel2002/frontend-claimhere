@@ -26,6 +26,14 @@ export class DataTableComponent {
   @Output() itemDelete = new EventEmitter<any>();
   @Output() itemDisable = new EventEmitter<any>();
 
+  taskRequest(item: any) {
+    this.modalService.openModalTask(item, this.entity);
+  }
+
+  resolutionRequest(item: any){
+    this.modalService.openModalResolution(item, this.entity);
+  }
+
   viewRequest(item: any) {
     this.modalService.openModalView(item, this.entity);
   }

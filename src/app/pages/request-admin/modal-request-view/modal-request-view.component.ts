@@ -5,10 +5,10 @@ import { ModalService } from '../../../core/services-admin/modal/modal.service';
 import { Subscription } from 'rxjs';
 import { CaseRequest } from '../../../core/models/case-request.model';
 import { NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
-import { CaseRequestFull, Document } from '../../../core/models/case-request-full.model';
+// import { CaseRequestFull, Document } from '../../../core/models/case-request-full.model';
 import { DropdownCustomerComponent } from '../../../shared/components-admin/dropdown-customer/dropdown-customer.component';
 import { FormControl, Validators } from '@angular/forms';
-import { DOCUMENT_SERVICE_TOKEN, LAWYER_SERVICE_TOKEN } from '../../../core/models/token-injection.model';
+import { AUTH_SERVICE_TOKEN, DOCUMENT_SERVICE_TOKEN, LAWYER_SERVICE_TOKEN } from '../../../core/models/token-injection.model';
 import { FileCardComponent } from '../../../shared/components-admin/file-card/file-card.component';
 import { ModalEntityType } from '../../../core/models/modal-entity-type';
 import { document } from '../../../core/models/document.model';
@@ -38,9 +38,9 @@ export class ModalRequestViewComponent implements OnInit {
 
   uploadError: string | null = null;
 
-  modalPayload: { mode: 'create' | 'edit' | 'view', data: string | null} | null = null;
+  modalPayload: { mode: 'create' | 'edit' | 'view' | 'task' | 'resolution', data: string | null} | null = null;
 
-  requestFull: CaseRequestFull | null = null;
+  request: Partial<CaseRequest> | null = null;
 
   cotization!: document;
 
@@ -50,17 +50,18 @@ export class ModalRequestViewComponent implements OnInit {
     const sub = this.modalService.getModalData().subscribe(payload => {
       if (payload && payload.mode === 'view') {
         this.modalPayload = payload;
+        this.request = payload.data;
         this.isOpenModal = true;
-        this.loadRequestData(payload.data);
+        this.loadRequestData(payload.data.code);
       }
     });
     this.subscription.add(sub);
   }
 
   loadRequestData(code: string): void {
-    const sub = this.requestService.getRequestByCode(code).subscribe({
-      next: (data: any) => {
-        this.requestFull = data;
+    const sub = this.requestService.getRequestView(code).subscribe({
+      next: (data: Partial<CaseRequest>) => {
+        this.request = { ...this.request, ...data };
       },
       error: (error: any) => {
         this.alertService.error({message:'Error al cargar los datos del caso.'});
@@ -89,23 +90,28 @@ export class ModalRequestViewComponent implements OnInit {
   }
 
   isStep0Active(): boolean {
-    const status = this.requestFull?.status_request?.toUpperCase() ?? '';
-    return ['RECEIVED', 'VALIDATED', 'QUOTED', 'ASSIGNED'].includes(status);
+    const status = this.request?.status_request?.toUpperCase() ?? '';
+    return ['RECEIVED', 'VALIDATED', 'ASSIGNED', 'QUOTED', 'QUOTED_APPROVED'].includes(status);
   }
 
   isStep1Active(): boolean {
-    const status = this.requestFull?.status_request?.toUpperCase() ?? '';
-    return ['VALIDATED', 'QUOTED', 'ASSIGNED'].includes(status);
+    const status = this.request?.status_request?.toUpperCase() ?? '';
+    return ['VALIDATED', 'ASSIGNED', 'QUOTED', 'QUOTED_APPROVED'].includes(status);
   }
 
   isStep2Active(): boolean {
-    const status = this.requestFull?.status_request?.toUpperCase() ?? '';
-    return ['QUOTED', 'ASSIGNED'].includes(status);
+    const status = this.request?.status_request?.toUpperCase() ?? '';
+    return ['ASSIGNED', 'QUOTED', 'QUOTED_APPROVED'].includes(status);
   }
 
   isStep3Active(): boolean {
-    const status = this.requestFull?.status_request?.toUpperCase();
-    return status === 'ASSIGNED';
+    const status = this.request?.status_request?.toUpperCase() ?? '';
+    return ['QUOTED', 'QUOTED_APPROVED'].includes(status);
+  }
+
+  isStep4Active(): boolean {
+    const status = this.request?.status_request?.toUpperCase() ?? '';
+    return status === 'QUOTED_APPROVED';
   }
 
   udpateStatus(text: string) {
@@ -166,17 +172,17 @@ export class ModalRequestViewComponent implements OnInit {
 
       if (text === 'Cotizar') {
         request$ = this.requestService.updateStatusWithCotization(
-          this.modalPayload?.data!,
+          this.request?.code!,
           this.cotization
         );
       } else if (text === 'Asignar') {
         request$ = this.requestService.updateStatusWithLawyer(
-          this.modalPayload?.data!,
+          this.request?.code!,
           this.lawyer.value
         );
       } else {
         request$ = this.requestService.updateStatus(
-          this.modalPayload?.data!,
+          this.request?.code!,
           action.status
         );
       }
@@ -189,15 +195,15 @@ export class ModalRequestViewComponent implements OnInit {
               message: action.message,
             })
             .then(() => {
-              if(text === 'Validar') this.requestFull!.status_request = "VALIDATED";
+              if(text === 'Validar') this.request!.status_request = "VALIDATED";
               if(text === 'Cotizar') {
-                this.requestFull!.status_request = "QUOTED";
+                this.request!.status_request = "QUOTED";
                 const documentMap: any = response.documentMap?.[0]
-                this.requestFull!.cotizacion = documentMap ;
+                this.request!.cotization = documentMap ;
               }
               if(text === 'Asignar') {
-                this.requestFull!.lawyerName = response.lawyer;
-                this.requestFull!.status_request = "ASSIGNED"};
+                this.request!.lawyerName = response.lawyer;
+                this.request!.status_request = "ASSIGNED"};
               if(text === 'Aprobar') this.close();
 
               this.dataUpdated.emit();
@@ -214,7 +220,7 @@ export class ModalRequestViewComponent implements OnInit {
 
   getStatusClass(): string {
     const baseClasses = "px-2 py-1 rounded-full text-sm font-medium";
-    const status = this.requestFull?.status_request?.toLowerCase();
+    const status = this.request?.status_request?.toLowerCase();
 
     switch (status) {
       case "received":
@@ -222,7 +228,7 @@ export class ModalRequestViewComponent implements OnInit {
       case "assigned":
       case "validated":
         return `${baseClasses} bg-yellow-100 text-yellow-800`;
-      case "approved":
+      case "quoted_approved":
         return `${baseClasses} bg-green-100 text-green-800`;
       case "rejected":
         return `${baseClasses} bg-red-100 text-red-800`;
